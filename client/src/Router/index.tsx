@@ -1,16 +1,16 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom"
-import Home from "../pages/Home"
-import SignIn from "../pages/sign-in"
+import Dashboard from '../pages/Dashboard'
 import ProtectedRoute from "./ProtectedRoute"
+import FormPage from "../pages/FormPage"
 
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/">
-            <Route element={<ProtectedRoute />}>
-                <Route index element={<Home />} />
+            <Route path="dashboard" element={<ProtectedRoute />}>
+                <Route index element={<Dashboard />} />
             </Route>
-            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-in" element={<FormPage />} />
         </Route>
     )
 )
