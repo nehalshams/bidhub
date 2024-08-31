@@ -1,13 +1,15 @@
 import { Box } from "@mui/material";
 import Layout from "../Layout";
 import Navbar from "../Layout/Navbar";
-import BaseTable, { Bid } from "../../components/BaseTable";
+// import BaseTable, { Bid } from "../../components/BaseTable";
 import { useState } from "react";
 import BidModal from "../../components/BidModal";
+import BaseTable, { Bid } from "../../components/BaseTable";
 
 const Dashboard = () => {
     const [bidModal, setBidModal] = useState<boolean>();
     const [rowData, setRowData] = useState<Bid>();
+    
     const handlePlaceBid = (data: Bid) => {
       // console.log("handlePlaceBid", id);
       setRowData(data);
