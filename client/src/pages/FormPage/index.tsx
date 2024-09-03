@@ -11,10 +11,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
+import { formValidator } from "../../utils/validation";
+import { useLoginUserMutation, useSignupUserMutation } from "../../api";
 
 export default function FormPage() {
-  const navigate = useNavigate()
-  const [isSigninForm, setIsSigninForm] = React.useState(false);
+  const navigate = useNavigate();
+  const [isSigninForm, setIsSigninForm] = React.useState(true);
   const [isPasswordType, setIsPasswordType] = React.useState(true);
 
   const [formField, setFormField] = React.useState({
@@ -23,6 +25,8 @@ export default function FormPage() {
     email: "",
     password: "",
   });
+  const [signupUser] = useSignupUserMutation();
+  const [loginUser] = useLoginUserMutation();
 
   const handleFormType = () => {
     setIsSigninForm(!isSigninForm);
@@ -36,15 +40,42 @@ export default function FormPage() {
     setFormField({ ...formField, [name]: value });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const resp = await loginUser({ email: formField.email, password: formField.password });
+    if(resp.data.token){
+      localStorage.setItem('token', resp.data.token)
+      navigate('/dashboard')
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { firstName, lastName, email, password } = formField;
     const userData = JSON.stringify(formField);
-    if(isSigninForm && email && password){
-      localStorage.setItem('user', userData);
-      navigate('/dashboard')
+    if (isSigninForm && email && password) {
+      localStorage.setItem("user", userData);
+      navigate("/dashboard");
+    } else if (!isSigninForm && firstName && lastName && email && password) {
+      const isValid = formValidator(formField);
+      if (isValid) {
+        const resp = await signupUser(formField);
+        console.log("🚀 ~ file: index.tsx:54 ~ handleSubmit ~ resp:", resp);
+
+        setIsSigninForm(true);
+        setFormField({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+        });
+      } else {
+        alert("Please provide correct data");
+      }
+    } else {
+      alert("Not allowed");
     }
-    console.log("handleSubmit", formField);
   };
 
   return (
@@ -64,13 +95,18 @@ export default function FormPage() {
         <Typography component="h1" variant="h5">
           {isSigninForm ? "Sign In" : "Sign up"}
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={isSigninForm ? handleSignIn : handleSubmit}
+          sx={{ mt: 3 }}
+        >
           <Grid container spacing={2}>
             {isSigninForm ? (
               <></>
             ) : (
               <>
-                <Grid size={{ md: 6}}>
+                <Grid size={{ md: 6 }}>
                   <TextField
                     onChange={handleFormChange}
                     autoComplete="given-name"
@@ -82,7 +118,7 @@ export default function FormPage() {
                     autoFocus
                   />
                 </Grid>
-                <Grid size={{ md: 6}}>
+                <Grid size={{ md: 6 }}>
                   <TextField
                     onChange={handleFormChange}
                     required
@@ -95,7 +131,7 @@ export default function FormPage() {
                 </Grid>
               </>
             )}
-            <Grid size={12} >
+            <Grid size={12}>
               <TextField
                 onChange={handleFormChange}
                 required
@@ -106,7 +142,7 @@ export default function FormPage() {
                 autoComplete="email"
               />
             </Grid>
-            <Grid size={12} >
+            <Grid size={12}>
               <TextField
                 onChange={handleFormChange}
                 required
@@ -118,7 +154,7 @@ export default function FormPage() {
                 autoComplete="new-password"
               />
             </Grid>
-            <Grid >
+            <Grid>
               <FormControlLabel
                 onClick={handlePasswordVisibility}
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
@@ -136,7 +172,7 @@ export default function FormPage() {
             {isSigninForm ? "Sign In" : "Sign up"}
           </Button>
           <Grid container justifyContent="flex-end">
-            <Grid >
+            <Grid>
               <Button onClick={handleFormType}>
                 {isSigninForm
                   ? "Don't have an account? Sign Up"

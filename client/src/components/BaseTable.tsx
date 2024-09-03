@@ -15,6 +15,10 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { bidData } from "../data";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useNavigate } from "react-router-dom";
+import { Bid } from "../types/bid.type";
 
 // function createData(
 //   name: string,
@@ -45,22 +49,17 @@ import { bidData } from "../data";
 //     ],
 //   };
 // }
-export type Bid = {
-  name: string;
-  price: number;
-  bid: number;
-  history: {
-    date: string;
-    bidderName: string;
-    price: number;
-    total: number,
-  }[];
-};
+
 type Props = { row: Bid; handleBidClick: (bid: Bid) => void };
 function Row(props: Props) {
   const { row, handleBidClick } = props;
+  const navigate = useNavigate()
   const [open, setOpen] = React.useState(false);
+  const [isFavorite, setIsFavorite] = React.useState(false);
 
+  const handleBidDetails = (id: string) => {
+    navigate(`/bid/${id}`)
+  }
   return (
     <React.Fragment>
       <TableRow
@@ -76,13 +75,21 @@ function Row(props: Props) {
           </IconButton>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
+        <Button onClick={() => handleBidDetails(row.id)} variant="text">
           {row.name}
+          </Button>
         </StyledTableCell>
         <StyledTableCell align="right">{row.price}</StyledTableCell>
         <StyledTableCell align="right">{row.bid}</StyledTableCell>
         <StyledTableCell align="right"></StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
+
+        <StyledTableCell align="right">
+          <Button onClick={() => handleBidClick(row)} variant="contained">
+            {isFavorite ? <FavoriteBorderIcon /> : <FavoriteIcon />}
+          </Button>
+        </StyledTableCell>
         <StyledTableCell align="right">
           <Button onClick={() => handleBidClick(row)} variant="contained">
             Bid Now
@@ -124,7 +131,7 @@ function Row(props: Props) {
                         {historyRow.price}
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        { historyRow.total}
+                        {historyRow.total}
                         {/* {Math.round(historyRow.amount * row.price * 100) / 100} */}
                       </StyledTableCell>
                     </TableRow>
@@ -139,8 +146,7 @@ function Row(props: Props) {
   );
 }
 
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
@@ -164,6 +170,7 @@ export default function BaseTable({ handlePlaceBid }: TableProps) {
             <StyledTableCell align="right">Price</StyledTableCell>
             <StyledTableCell align="right">Total Bid</StyledTableCell>
             <StyledTableCell align="right">Time Left</StyledTableCell>
+            <StyledTableCell align="right">Add to favorite</StyledTableCell>
             <StyledTableCell align="right" />
           </TableRow>
         </TableHead>

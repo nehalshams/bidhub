@@ -3,6 +3,7 @@ export const bidData = [
     name: "www.abc.com",
     price: 20,
     bid: 2,
+    id: "7647574543743",
     history: [
       {
         bidderName: "yolman",
@@ -22,6 +23,7 @@ export const bidData = [
     name: "www.superman.com",
     price: 20,
     bid: 2,
+    id: "7647574543753",
     history: [
       {
         bidderName: "Reddy",
@@ -40,6 +42,7 @@ export const bidData = [
   {
     name: "www.deal.com",
     price: 20,
+    id: "7447574543743",
     bid: 2,
     history: [
       {
@@ -59,6 +62,7 @@ export const bidData = [
   {
     name: "www.abc.com",
     price: 20,
+    id: "76488574543743",
     bid: 2,
     history: [
       {
@@ -78,6 +82,7 @@ export const bidData = [
   {
     name: "www.abc.com",
     price: 20,
+    id: "7647576643743",
     bid: 2,
     history: [
       {
@@ -95,3 +100,7 @@ export const bidData = [
     ],
   },
 ];
+
+export const domainType = [
+
+]

@@ -8,7 +8,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Modal from "./Modal";
 import { TextField, Typography, Chip } from "@mui/material";
 import { Box } from "@mui/system";
-import { Bid } from "./BaseTable";
+import { Bid } from "../types/bid.type";
+
 type Props = {
   data?: Bid;
   open: boolean;
