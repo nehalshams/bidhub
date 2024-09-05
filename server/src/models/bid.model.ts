@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IBid extends Document {
   domainId: mongoose.Schema.Types.ObjectId;
   userId: mongoose.Schema.Types.ObjectId;
+  auctionId: mongoose.Schema.Types.ObjectId;
   amount: number;
   createdAt: Date;
 }
