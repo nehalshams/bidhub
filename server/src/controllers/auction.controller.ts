@@ -72,58 +72,58 @@ export const getDomain = async (req: Request, res: Response) => {
 
 // Get all domain auction listings
 export const getAllAuctions = async (req: Request, res: Response) => {
-  const { name = "" } = req.query
-  if (typeof name !== 'string') {
-    return res.status(400).json({ message: 'Invalid query parameter' });
+  const { name = "" } = req.query;
+  if (typeof name !== "string") {
+    return res.status(400).json({ message: "Invalid query parameter" });
   }
   try {
     const auctions = await Auction.aggregate([
       {
         $match: {
-          domainName: new RegExp(name, 'i') // Case-insensitive search
-        }
+          domainName: new RegExp(name, "i"), // Case-insensitive search
+        },
       },
       {
         $lookup: {
-          from: 'bids',
-          localField: '_id',
-          foreignField: 'auctionId',
-          as: 'bids'
-        }
+          from: "bids",
+          localField: "_id",
+          foreignField: "auctionId",
+          as: "bids",
+        },
       },
       {
         $unwind: {
-          path: '$bids',
-          preserveNullAndEmptyArrays: true
-        }
+          path: "$bids",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $sort: {
-          'bids.createdAt': -1
-        }
+          "bids.createdAt": -1,
+        },
       },
       {
         $group: {
-          _id: '$_id',
-          domainName: { $first: '$domainName' },
-          startDate: { $first: '$startDate' },
-          endDate: { $first: '$endDate' },
-          latestBid: { $first: '$bids' }
-        }
+          _id: "$_id",
+          domainName: { $first: "$domainName" },
+          startDate: { $first: "$startDate" },
+          endDate: { $first: "$endDate" },
+          latestBid: { $first: "$bids" },
+        },
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'latestBid.userId',
-          foreignField: '_id',
-          as: 'latestBid.user'
-        }
+          from: "users",
+          localField: "latestBid.userId",
+          foreignField: "_id",
+          as: "latestBid.user",
+        },
       },
       {
         $unwind: {
-          path: '$latestBid.user',
-          preserveNullAndEmptyArrays: true
-        }
+          path: "$latestBid.user",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $project: {
@@ -134,10 +134,10 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           latestBid: {
             amount: 1,
             createdAt: 1,
-            'user.email': 1
-          }
-        }
-      }
+            "user.email": 1,
+          },
+        },
+      },
     ]);
 
     res.json(auctions);
@@ -160,12 +160,10 @@ export const placeBid = async (req: Request, res: Response) => {
 
     // Check if the bid amount is higher than the current price
     if (amount <= (auction.currentPrice || auction.startingPrice)) {
-      return res
-        .status(400)
-        .json({
-          message: "Bid amount must be higher than the current price",
-          success: false,
-        });
+      return res.status(400).json({
+        message: "Bid amount must be higher than the current price",
+        success: false,
+      });
     }
 
     // Create a new bid
@@ -174,6 +172,12 @@ export const placeBid = async (req: Request, res: Response) => {
     // Update the domain's current price
     auction.currentPrice = amount;
     await auction.save();
+
+    // Update the auction's bidHistory to include the new bid
+    await Auction.findByIdAndUpdate(auctionId, {
+      $push: { bidHistory: newBid._id },
+      $set: { currentPrice: amount }, // Optionally, update current price with latest bid
+    });
 
     res.status(201).json(newBid);
   } catch (error) {
@@ -217,7 +221,7 @@ export const selectWinner = async (req: Request, res: Response) => {
 };
 
 export const getAllBid = async (req: Request, res: Response) => {
-  const { auctionId } = req.params;
+  const { auctionId = "" } = req.params;
   try {
     const bids = await Bid.find({ auctionId: auctionId })
       .populate("userId")
@@ -238,4 +242,20 @@ export const getAllBid = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
+};
+
+export const getAuctionDetails = async (req: Request, res: Response) => {
+  const { auctionId } = req.params;
+
+  try {
+    const auctionDetail = await Auction.findById(auctionId).populate({
+      path: "bidHistory",
+      populate: { path: "userId", select: 'email firstName lastName' },
+    });
+    console.log(
+      "🚀 ~ file: auction.controller.ts:248 ~ getAuctionDetails ~ auctionDetail:",
+      auctionDetail
+    );
+    res.status(200).json({ data: auctionDetail });
+  } catch (error) {}
 };

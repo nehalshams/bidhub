@@ -7,6 +7,7 @@ import {
   deleteAuction,
   getAllBid,
   getAllAuctions,
+  getAuctionDetails,
 //   getDomainBids
 } from '../controllers/auction.controller';
 
@@ -26,6 +27,9 @@ router.put('/:auctionId', updateAuction);
 
 // Delete a domain auction listing
 router.delete('/:auctionId', deleteAuction);
+
+// get details by auction id
+router.get('/:auctionId', getAuctionDetails);
 
 // Place a bid on a domain auction
 router.post('/:auctionId/bid', placeBid);

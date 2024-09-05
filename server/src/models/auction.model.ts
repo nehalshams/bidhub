@@ -19,7 +19,8 @@ const AuctionSchema: Schema = new Schema({
   status: { type: String, enum: ['active', 'closed'], default: 'active' },
   auctionEndTime: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
+  bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid'}]
 });
 
 export default mongoose.model<IDomain>('Auction', AuctionSchema);
