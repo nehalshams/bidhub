@@ -8,17 +8,16 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { bidData } from "../data";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import { Bid } from "../types/bid.type";
+import History from "../pages/Dashboard/History";
 
 // function createData(
 //   name: string,
@@ -53,13 +52,13 @@ import { Bid } from "../types/bid.type";
 type Props = { row: Bid; handleBidClick: (bid: Bid) => void };
 function Row(props: Props) {
   const { row, handleBidClick } = props;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [isFavorite, setIsFavorite] = React.useState(false);
 
   const handleBidDetails = (id: string) => {
-    navigate(`/bid/${id}`)
-  }
+    navigate(`/bid/${id}`);
+  };
   return (
     <React.Fragment>
       <TableRow
@@ -75,11 +74,11 @@ function Row(props: Props) {
           </IconButton>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
-        <Button onClick={() => handleBidDetails(row.id)} variant="text">
-          {row.name}
+          <Button sx={{ justifyContent: 'flex-start', padding: 0}} onClick={() => handleBidDetails(row._id)} variant="text">
+            {row.domainName}
           </Button>
         </StyledTableCell>
-        <StyledTableCell align="right">{row.price}</StyledTableCell>
+        <StyledTableCell align="right">{row.latestBid.amount || row.startingPrice}</StyledTableCell>
         <StyledTableCell align="right">{row.bid}</StyledTableCell>
         <StyledTableCell align="right"></StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
@@ -96,52 +95,9 @@ function Row(props: Props) {
           </Button>
         </StyledTableCell>
       </TableRow>
-      <TableRow>
-        <StyledTableCell
-          style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={6}
-        >
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Date</StyledTableCell>
-                    <StyledTableCell>Customer</StyledTableCell>
-                    <StyledTableCell align="right">Amount</StyledTableCell>
-                    <StyledTableCell align="right">
-                      Total price ($)
-                    </StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <StyledTableCell component="th" scope="row">
-                        {historyRow.date}
-                      </StyledTableCell>
-                      <StyledTableCell component="th" scope="row">
-                        {historyRow.bidderName}
-                      </StyledTableCell>
-                      {/* <StyledTableCell>{historyRow.customerId}</StyledTableCell> */}
-                      <StyledTableCell align="right">
-                        {historyRow.price}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {historyRow.total}
-                        {/* {Math.round(historyRow.amount * row.price * 100) / 100} */}
-                      </StyledTableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </StyledTableCell>
-      </TableRow>
+      {open && (
+        <History auctionId={row._id} open={open}/>
+      )}
     </React.Fragment>
   );
 }
@@ -158,8 +114,9 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 type TableProps = {
   handlePlaceBid: (id: Bid) => void;
+  auctionData: Bid[];
 };
-export default function BaseTable({ handlePlaceBid }: TableProps) {
+export default function BaseTable({ handlePlaceBid, auctionData }: TableProps) {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -175,8 +132,8 @@ export default function BaseTable({ handlePlaceBid }: TableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {bidData.map((row) => (
-            <Row key={row.name} row={row} handleBidClick={handlePlaceBid} />
+          {auctionData.map((row) => (
+            <Row key={row._id} row={row} handleBidClick={handlePlaceBid} />
           ))}
         </TableBody>
       </Table>

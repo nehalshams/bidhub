@@ -9,6 +9,9 @@ import Modal from "./Modal";
 import { TextField, Typography, Chip } from "@mui/material";
 import { Box } from "@mui/system";
 import { Bid } from "../types/bid.type";
+import { usePlaceBidMutation } from "../api";
+import { getUser } from "../utils/helper";
+import { toast } from "react-toastify";
 
 type Props = {
   data?: Bid;
@@ -18,9 +21,27 @@ type Props = {
 };
 
 const BidModal = ({ data, open, handleClose }: Props) => {
+  const [bidPrice, setBidPrice] = React.useState(0);
+
+  const [createBid, { error }] = usePlaceBidMutation();
+
+  const handlePlaceBid = async () => {
+    const { _id } = getUser();
+    const payload = { auctionId: data?._id, userId: _id, amount: bidPrice };
+    const resp = await createBid(payload);
+    if ("data" in resp) {
+      toast.success("Bid placed successfully");
+      handleClose();
+    }
+    if (error) {
+      const err = error as any;
+      toast.error(err?.data?.message || "Bid is not placed.");
+    }
+  };
+
   return (
     <Modal open={open} handleClose={handleClose}>
-      <DialogTitle id="alert-dialog-title">{data?.name}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{data?.domainName}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           <Box
@@ -29,7 +50,7 @@ const BidModal = ({ data, open, handleClose }: Props) => {
               width: "25rem",
               p: 2,
               display: "flex",
-              alignItems: 'center',
+              alignItems: "center",
               gap: "3rem",
             }}
           >
@@ -39,12 +60,12 @@ const BidModal = ({ data, open, handleClose }: Props) => {
                 flex: 1,
               }}
             >
-              ${data?.price}
+              ${data?.currentPrice || data?.startingPrice}
               <Chip
                 sx={{
                   marginLeft: "3rem",
                 }}
-                label={`by ${data?.history[0].bidderName}`}
+                label={`by ${data?.history?.[0]?.bidderName}`}
               />
             </Typography>
           </Box>
@@ -55,7 +76,7 @@ const BidModal = ({ data, open, handleClose }: Props) => {
               width: "25rem",
               p: 2,
               display: "flex",
-              alignItems: 'center',
+              alignItems: "center",
               gap: "1rem",
             }}
           >
@@ -66,13 +87,14 @@ const BidModal = ({ data, open, handleClose }: Props) => {
               }}
               InputLabelProps={{ shrink: true }}
               label="$"
+              onChange={(e) => setBidPrice(Number(e.target.value))}
             />
           </Box>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-        <Button variant="contained" onClick={handleClose} autoFocus>
+        <Button variant="contained" onClick={handlePlaceBid} autoFocus>
           Place Bid
         </Button>
       </DialogActions>

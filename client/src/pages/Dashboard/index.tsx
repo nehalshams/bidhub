@@ -2,17 +2,20 @@ import { Box, TextField } from "@mui/material";
 import Layout from "../Layout";
 import Navbar from "../Layout/Navbar";
 // import BaseTable, { Bid } from "../../components/BaseTable";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import BidModal from "../../components/BidModal";
 import BaseTable from "../../components/BaseTable";
 import { Bid } from "../../types/bid.type";
 import Dropdown from "../../components/Dropdown";
 import { domainType } from "../../data";
 import CreateAuction from "./CreateAuction";
+import { useGetAuctionsQuery } from "../../api";
 
 const Dashboard = () => {
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
+  const [searchQuery, setSearchQuery] = useState("")
+  const { data: auctionData, isLoading} = useGetAuctionsQuery({ domainName: searchQuery})
 
   const handlePlaceBid = (data: Bid) => {
     // console.log("handlePlaceBid", id);
@@ -21,7 +24,9 @@ const Dashboard = () => {
   };
 
   const handleConfirm = () => {};
-  const handleSearch = () => {};
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  };
   return (
     <Layout>
       <>
@@ -47,7 +52,11 @@ const Dashboard = () => {
               />
               <Dropdown options={domainType} label="Domain Type" />
             </Box>
-            <BaseTable handlePlaceBid={handlePlaceBid} />
+            {
+              isLoading? ""
+              :
+            <BaseTable auctionData={auctionData} handlePlaceBid={handlePlaceBid} />
+            }
           </Box>
         </Box>
         <CreateAuction/>

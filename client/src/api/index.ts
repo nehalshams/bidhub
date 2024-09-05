@@ -20,7 +20,6 @@ export const api = createApi({
     }),
     loginUser: builder.mutation({
       query: (loginData) => {
-        console.log("🚀 ~ file: index.ts:24 ~ loginData:", loginData);
         return {
           url: "/users/login", // Endpoint path for login
           method: "POST", // HTTP method
@@ -28,10 +27,42 @@ export const api = createApi({
         };
       },
     }),
+
+    createAuction: builder.mutation({
+      query: (auctionData) => {
+        return {
+          url: "/auctions", // Endpoint path for login
+          method: "POST", // HTTP method
+          body: auctionData, // Data to be sent to the server
+        };
+      },
+    }),
+    getAuctions: builder.query({
+      query: ({ domainName }) => {
+        return `/auctions?name=${domainName || ""}`;
+      },
+    }),
+    placeBid: builder.mutation({
+      query: (bidData) => ({
+        url: `/auctions/${bidData.auctionId}/bid`,
+        method: "POST",
+        body: bidData,
+      }),
+    }),
+    getAllBid: builder.query({
+      query: (bidData) => `/auctions/${bidData.auctionId}/bid`,
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPostsQuery, useSignupUserMutation, useLoginUserMutation } =
-  api;
+export const {
+  useGetPostsQuery,
+  useSignupUserMutation,
+  useLoginUserMutation,
+  useCreateAuctionMutation,
+  useGetAuctionsQuery,
+  usePlaceBidMutation,
+  useGetAllBidQuery,
+} = api;

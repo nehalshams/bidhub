@@ -46,6 +46,7 @@ export default function FormPage() {
     const resp = await loginUser({ email: formField.email, password: formField.password });
     if(resp.data.token){
       localStorage.setItem('token', resp.data.token)
+      localStorage.setItem('user', JSON.stringify(resp.data.user))
       navigate('/dashboard')
     }
   };
@@ -61,8 +62,6 @@ export default function FormPage() {
       const isValid = formValidator(formField);
       if (isValid) {
         const resp = await signupUser(formField);
-        console.log("🚀 ~ file: index.tsx:54 ~ handleSubmit ~ resp:", resp);
-
         setIsSigninForm(true);
         setFormField({
           firstName: "",
@@ -71,7 +70,7 @@ export default function FormPage() {
           password: "",
         });
       } else {
-        alert("Please provide correct data");
+        // toas
       }
     } else {
       alert("Not allowed");

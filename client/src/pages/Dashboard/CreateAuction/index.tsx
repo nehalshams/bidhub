@@ -4,11 +4,45 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import AuctionForm from "./AuctionForm";
 import { Button, TextField, Typography } from "@mui/material";
+import DateComponent from "../../../components/DatePicker";
+import { useCreateAuctionMutation } from "../../../api";
+import { toast } from "react-toastify";
 
+type AuctionForm = {
+  domainName?: string;
+  description?: string;
+  currentPrice?: number;
+  auctionEndTime?: Date;
+  createdAt?: Date;
+};
 export default function CreateAuction() {
+
   const [auctionModel, setAuctionModel] = React.useState(false);
+  const [auctionForm, setAuctionForm] = React.useState<AuctionForm>();
+
+  const [ createAuction] = useCreateAuctionMutation()
   const handleCreateAuctionBtn = () => {
     setAuctionModel(true);
+  };
+
+  const handleAuctionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAuctionForm({ ...auctionForm, [name]: value });
+  };
+  const handleDateChange = ({ name, value }: { name: string; value: any }) => {
+    setAuctionForm({ ...auctionForm, [name]: value });
+  };
+
+  const handleCreateAuction = async () => {
+    const resp = await createAuction(auctionForm)
+    if(resp && resp?.data?.success){
+      toast.success('Auction created successfully.');
+      setAuctionModel(false)
+    }else {
+      toast.error('Auction not created');
+
+    }
+    
   };
   return (
     <>
@@ -35,7 +69,8 @@ export default function CreateAuction() {
               Create Auction
             </Typography>
             <TextField
-              // onChange={handleSearch}
+              onChange={handleAuctionChange}
+              name="domainName"
               required
               fullWidth
               label="Enter domain"
@@ -44,12 +79,29 @@ export default function CreateAuction() {
               }}
             />
             <TextField
-              // onChange={handleSearch}
+              onChange={handleAuctionChange}
+              name="startingPrice"
               required
               fullWidth
               label="Base Price( $ )"
             />
-            <Box display={'flex'}>
+            <Box
+              mt={".5rem"}
+              display={"flex"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography>End Date</Typography>
+              <DateComponent
+                handleDateChange={(value: any) =>
+                  handleDateChange({
+                    name: "auctionEndTime",
+                    value,
+                  })
+                }
+              />
+            </Box>
+            <Box display={"flex"}>
               <Button
                 type="submit"
                 fullWidth
@@ -63,7 +115,7 @@ export default function CreateAuction() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                // onClick={handleFormSubmit}
+                onClick={handleCreateAuction}
               >
                 Create
               </Button>

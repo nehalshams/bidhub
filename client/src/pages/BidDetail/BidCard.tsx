@@ -8,7 +8,7 @@ type Props = {
 const BidCard = ({ data }: Props) => {
   return (
     <div>
-        <CardComponent heading={data.name}/>
+        <CardComponent heading={data.domainName}/>
     </div>
   )
 }

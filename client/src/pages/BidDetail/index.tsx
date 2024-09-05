@@ -32,11 +32,11 @@ const BidDetail = () => {
     <Grid2 container justifyContent={'center'} alignItems={'center'} spacing={'1rem'} padding={'1rem'}>
       <Grid2 size={{ xs: 12, md: 4 }}>
         <Typography>Auction Details</Typography>
-        <BidCard data={bid} />
+        {/* <BidCard data={bid} /> */}
       </Grid2>
       <Grid2 size={{ xs: 12, md: 4 }} >
       <Typography>Domain Details</Typography>
-        <BidCard data={bid} />
+        {/* <BidCard data={bid} /> */}
       </Grid2>
 
       <Grid2 size={{ xs: 12, md: 8}}>

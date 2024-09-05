@@ -1,8 +1,18 @@
+type Price = {
+  amount: number
+}
+
 export type Bid = {
-    name: string;
-    price: number;
+    domainName: string;
+    startingPrice: number;
+    currentPrice: number;
+    latestBid: Price,
+    auctionEndTime: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
     bid: number;
-    id: string;
+    _id: string;
     history: {
       date: string;
       bidderName: string;
@@ -10,6 +20,16 @@ export type Bid = {
       total: number;
     }[];
   };
+export type User = {
+  firstName: string,
+  lastName: string
+}
+export type HistoryType = {
+  _id: string;
+  createdAt: string,
+  amount: number,
+  user: User
+}
 
 export type CardDataType = {
     heading: string;
