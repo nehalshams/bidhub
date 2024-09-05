@@ -8,7 +8,7 @@ export interface IBid extends Document {
 }
 
 const BidSchema: Schema = new Schema({
-  domainId: { type: Schema.Types.ObjectId, ref: 'Domain', required: true },
+  auctionId: { type: Schema.Types.ObjectId, ref: 'Auction', required: true },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   amount: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now }
