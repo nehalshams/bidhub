@@ -54,8 +54,8 @@ export default function Navbar(props: Props) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-  }
+    localStorage.removeItem("token");
+  };
 
   const renderMobileMenu = (
     <Menu
@@ -157,7 +157,18 @@ export default function Navbar(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar
+        sx={{
+          top: "1rem",
+          left: { xs: ".5rem", md: "3rem" },
+          right: { xs: ".5rem", md: "3rem" },
+          width: "auto",
+          borderRadius: "4rem",
+          maxWidth: '1260px',
+          margin: 'auto'
+        }}
+        component="nav"
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -171,7 +182,7 @@ export default function Navbar(props: Props) {
           <Typography variant="h6" component="div">
             BidHub
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box sx={{ display: { xs: "none", sm: "flex" }, width: '35%', justifyContent: 'space-evenly' }}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: "#fff" }}>
                 {item}

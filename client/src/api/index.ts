@@ -7,6 +7,7 @@ const baseUrl = process.env.REACT_APP_API_BASE_URL;
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl }), // Base URL for API requests
+  tagTypes: ['Auction'],
   endpoints: (builder) => ({
     getPosts: builder.query({
       query: () => "posts", // endpoint for fetching posts
@@ -36,11 +37,13 @@ export const api = createApi({
           body: auctionData, // Data to be sent to the server
         };
       },
+      invalidatesTags: ['Auction'],
     }),
     getAuctions: builder.query({
       query: ({ domainName }) => {
         return `/auctions?name=${domainName || ""}`;
       },
+      providesTags: ['Auction']
     }),
     placeBid: builder.mutation({
       query: (bidData) => ({
@@ -48,6 +51,7 @@ export const api = createApi({
         method: "POST",
         body: bidData,
       }),
+      invalidatesTags: ['Auction']
     }),
     getAllBid: builder.query({
       query: (bidData) => `/auctions/${bidData.auctionId}/bid`,
