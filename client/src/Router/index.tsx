@@ -7,10 +7,8 @@ import BidDetail from "../pages/BidDetail"
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/">
-            <Route path="" element={<ProtectedRoute />}>
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route index element={<Dashboard />} />
                 <Route path="/bid/:id" element={<BidDetail/>}/>
-            </Route>
 
             <Route path="/sign-in" element={<FormPage />} />
         </Route>

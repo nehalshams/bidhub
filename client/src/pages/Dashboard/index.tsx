@@ -2,7 +2,7 @@ import { Box, TextField } from "@mui/material";
 import Layout from "../Layout";
 import Navbar from "../Layout/Navbar";
 // import BaseTable, { Bid } from "../../components/BaseTable";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import BidModal from "../../components/BidModal";
 import BaseTable from "../../components/BaseTable";
 import { Bid } from "../../types/bid.type";
@@ -10,8 +10,12 @@ import Dropdown from "../../components/Dropdown";
 import { domainType } from "../../data";
 import CreateAuction from "./CreateAuction";
 import { useGetAuctionsQuery } from "../../api";
+import { AuthContext } from "../../utils/AuthProvider";
 
 const Dashboard = () => {
+  const {isAuthenticated } = useContext(AuthContext)
+  console.log(isAuthenticated, '>>>>>>');
+  
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
   const [searchQuery, setSearchQuery] = useState("")
@@ -19,8 +23,12 @@ const Dashboard = () => {
 
   const handlePlaceBid = (data: Bid) => {
     // console.log("handlePlaceBid", id);
-    setRowData(data);
-    setBidModal(true);
+    if(isAuthenticated){
+      setRowData(data);
+      setBidModal(true);
+    }else{
+      // 
+    }
   };
 
   const handleConfirm = () => {};
@@ -55,7 +63,7 @@ const Dashboard = () => {
             {
               isLoading? ""
               :
-            <BaseTable auctionData={auctionData} handlePlaceBid={handlePlaceBid} />
+            <BaseTable auctionData={auctionData || []} handlePlaceBid={handlePlaceBid} />
             }
           </Box>
         </Box>

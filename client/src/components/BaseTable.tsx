@@ -18,6 +18,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import { Bid } from "../types/bid.type";
 import History from "../pages/Dashboard/History";
+import EmptyComponent from "./EmptyComponent";
 
 // function createData(
 //   name: string,
@@ -74,7 +75,7 @@ function Row(props: Props) {
           </IconButton>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
-          <Button sx={{ justifyContent: 'flex-start', padding: 0}} onClick={() => handleBidDetails(row._id)} variant="text">
+          <Button sx={{ justifyContent: 'flex-start', padding: 0 }} onClick={() => handleBidDetails(row._id)} variant="text">
             {row.domainName}
           </Button>
         </StyledTableCell>
@@ -96,7 +97,7 @@ function Row(props: Props) {
         </StyledTableCell>
       </TableRow>
       {open && (
-        <History auctionId={row._id} open={open}/>
+        <History auctionId={row._id} open={open} />
       )}
     </React.Fragment>
   );
@@ -132,9 +133,14 @@ export default function BaseTable({ handlePlaceBid, auctionData }: TableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {auctionData.map((row) => (
-            <Row key={row._id} row={row} handleBidClick={handlePlaceBid} />
-          ))}
+          {
+            auctionData.length ?
+              auctionData.map((row) => (
+                <Row key={row._id} row={row} handleBidClick={handlePlaceBid} />
+              ))
+              : <td colSpan={7}><EmptyComponent> There is no auction is going on </EmptyComponent></td>
+
+          }
         </TableBody>
       </Table>
     </TableContainer>

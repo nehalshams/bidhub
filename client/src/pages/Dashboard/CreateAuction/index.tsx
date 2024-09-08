@@ -7,6 +7,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import DateComponent from "../../../components/DatePicker";
 import { useCreateAuctionMutation } from "../../../api";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../../utils/AuthProvider";
 
 type AuctionForm = {
   domainName?: string;
@@ -16,13 +17,16 @@ type AuctionForm = {
   createdAt?: Date;
 };
 export default function CreateAuction() {
+  const {isAuthenticated } = React.useContext(AuthContext)
 
   const [auctionModel, setAuctionModel] = React.useState(false);
   const [auctionForm, setAuctionForm] = React.useState<AuctionForm>();
 
   const [ createAuction] = useCreateAuctionMutation()
   const handleCreateAuctionBtn = () => {
-    setAuctionModel(true);
+    if(isAuthenticated){
+      setAuctionModel(true);
+    }
   };
 
   const handleAuctionChange = (e: React.ChangeEvent<HTMLInputElement>) => {

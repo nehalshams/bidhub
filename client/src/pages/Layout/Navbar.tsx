@@ -20,6 +20,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   /**
@@ -34,6 +35,7 @@ const navItems = ["Home", "About", "Contact"];
 
 export default function Navbar(props: Props) {
   const { window } = props;
+  const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -54,8 +56,9 @@ export default function Navbar(props: Props) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-  };
+    localStorage.removeItem('token')
+    navigate(0)
+  }
 
   const renderMobileMenu = (
     <Menu
