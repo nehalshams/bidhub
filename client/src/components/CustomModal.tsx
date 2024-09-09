@@ -1,5 +1,5 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import Modal from './Modal';
 
 type Props = {
@@ -7,15 +7,17 @@ type Props = {
   handleClose: () => void;
   title?: string;
   handlePrimaryAction?: () => void;
-  primaryBtn?: string
+  primaryBtn?: string;
+  children?: ReactNode;
 }
-const CustomModal = ({ open, handleClose, title, handlePrimaryAction, primaryBtn }: Props) => {
+const CustomModal = ({ open, handleClose, title, handlePrimaryAction, primaryBtn, children }: Props) => {
   return (
     <Modal open={open} handleClose={handleClose}>
       <>
-        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        <DialogTitle fontWeight={'500'} id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
+            { children }
           </DialogContentText>
         </DialogContent>
         <DialogActions>

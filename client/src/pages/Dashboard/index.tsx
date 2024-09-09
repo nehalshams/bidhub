@@ -11,27 +11,38 @@ import { domainType } from "../../data";
 import CreateAuction from "./CreateAuction";
 import { useGetAuctionsQuery } from "../../api";
 import { AuthContext } from "../../utils/AuthProvider";
+import CustomModal from "../../components/CustomModal";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const {isAuthenticated } = useContext(AuthContext)
-  console.log(isAuthenticated, '>>>>>>');
-  
+  const { isAuthenticated, } = useContext(AuthContext)
+  const navigate = useNavigate()
+
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
-  const [searchQuery, setSearchQuery] = useState("")
-  const { data: auctionData, isLoading} = useGetAuctionsQuery({ domainName: searchQuery})
+  const [searchQuery, setSearchQuery] = useState("");
+  const [signInModal, setSignInModal] = useState(false);
+  const { data: auctionData, isLoading } = useGetAuctionsQuery({ domainName: searchQuery })
 
   const handlePlaceBid = (data: Bid) => {
     // console.log("handlePlaceBid", id);
-    if(isAuthenticated){
+    if (isAuthenticated) {
       setRowData(data);
       setBidModal(true);
-    }else{
+    } else {
       // 
     }
   };
 
-  const handleConfirm = () => {};
+  function handleSignInBtn(){
+    navigate('/sign-in')
+  }
+
+  const handleSignInModal = () => {
+    setSignInModal(!signInModal)
+  }
+
+  const handleConfirm = () => { };
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
   };
@@ -61,13 +72,13 @@ const Dashboard = () => {
               <Dropdown options={domainType} label="Domain Type" />
             </Box>
             {
-              isLoading? ""
-              :
-            <BaseTable auctionData={auctionData || []} handlePlaceBid={handlePlaceBid} />
+              isLoading ? ""
+                :
+                <BaseTable auctionData={auctionData || []} handlePlaceBid={handlePlaceBid} />
             }
           </Box>
         </Box>
-        <CreateAuction/>
+        <CreateAuction handleSignInModal={handleSignInModal} />
         {bidModal && (
           <BidModal
             data={rowData}
@@ -76,6 +87,19 @@ const Dashboard = () => {
             handleConfirm={handleConfirm}
           />
         )}
+        {
+          signInModal && (
+            <CustomModal
+              open={signInModal}
+              handleClose={handleSignInModal}
+              primaryBtn="Go to Sign In"
+              title="Need Sign In"
+              handlePrimaryAction={handleSignInBtn}
+            >
+              {'Before taking an action need to do sign in first.'}
+            </CustomModal>
+          )
+        }
       </>
     </Layout>
   );

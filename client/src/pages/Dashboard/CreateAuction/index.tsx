@@ -16,7 +16,11 @@ type AuctionForm = {
   auctionEndTime?: Date;
   createdAt?: Date;
 };
-export default function CreateAuction() {
+
+type Props = {
+  handleSignInModal: () => void;
+}
+export default function CreateAuction({ handleSignInModal }: Props) {
   const {isAuthenticated } = React.useContext(AuthContext)
 
   const [auctionModel, setAuctionModel] = React.useState(false);
@@ -26,6 +30,8 @@ export default function CreateAuction() {
   const handleCreateAuctionBtn = () => {
     if(isAuthenticated){
       setAuctionModel(true);
+    }else{
+      handleSignInModal()
     }
   };
 
@@ -44,7 +50,6 @@ export default function CreateAuction() {
       setAuctionModel(false)
     }else {
       toast.error('Auction not created');
-
     }
     
   };

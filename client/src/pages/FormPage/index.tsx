@@ -13,6 +13,8 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { formValidator } from "../../utils/validation";
 import { useLoginUserMutation, useSignupUserMutation } from "../../api";
+import { toast } from "react-toastify";
+import Banner from '../../img/bidhub-banner.png'
 
 export default function FormPage() {
   const navigate = useNavigate();
@@ -44,10 +46,12 @@ export default function FormPage() {
     event.preventDefault()
 
     const resp = await loginUser({ email: formField.email, password: formField.password });
-    if(resp.data.token){
+    if(resp?.data?.token){
       localStorage.setItem('token', resp.data.token)
       localStorage.setItem('user', JSON.stringify(resp.data.user))
       navigate('/dashboard')
+    }else {
+      toast.error('Something went wrong')
     }
   };
 
@@ -77,8 +81,28 @@ export default function FormPage() {
     }
   };
 
+  /* From https://css.glass */
+// background: rgba(255, 255, 255, 0.2);
+// border-radius: 16px;
+// box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+// backdrop-filter: blur(5px);
+// -webkit-backdrop-filter: blur(5px);
+// border: 1px solid rgba(255, 255, 255, 0.3);
+
   return (
     <Container component="main" maxWidth="xs">
+      <Box sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        background: "#d67976"
+      }}>
+        <Box sx={{ xs: '100vw', md: '50vw'}} display={'flex'} justifyContent={'center'}>
+        <img style={{ width: '', objectFit: 'contain'}} src={Banner}/>
+
+        </Box>
+      </Box>
       <CssBaseline />
       <Box
         sx={{
@@ -86,6 +110,14 @@ export default function FormPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          background: "rgba(255, 255, 255, 0.8)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+          backdropFilter: "blur(5px)",
+          zIndex: 99999999,
+          position: "relative",
+          opacity: .9,
+          padding: '1rem',
+          borderRadius: '1rem'
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -126,6 +158,9 @@ export default function FormPage() {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
+                    sx={{ 
+                      backgroundColor: '#fff'
+                    }}
                   />
                 </Grid>
               </>
