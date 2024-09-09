@@ -26,7 +26,7 @@ const bid = {
 const BidDetail = () => {
     const navigate = useNavigate()
     const handleBackBtn= () => {
-        navigate('/dashboard')
+        navigate('/')
     }
   return (
     <Grid2 container justifyContent={'center'} alignItems={'center'} spacing={'1rem'} padding={'1rem'}>

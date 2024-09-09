@@ -49,7 +49,7 @@ export default function FormPage() {
     if(resp?.data?.token){
       localStorage.setItem('token', resp.data.token)
       localStorage.setItem('user', JSON.stringify(resp.data.user))
-      navigate('/dashboard')
+      navigate('/')
     }else {
       toast.error('Something went wrong')
     }
@@ -61,7 +61,7 @@ export default function FormPage() {
     const userData = JSON.stringify(formField);
     if (isSigninForm && email && password) {
       localStorage.setItem("user", userData);
-      navigate("/dashboard");
+      navigate("/");
     } else if (!isSigninForm && firstName && lastName && email && password) {
       const isValid = formValidator(formField);
       if (isValid) {
@@ -96,6 +96,7 @@ export default function FormPage() {
         top: 0,
         left: 0,
         right: 0,
+        bottom: 0,
         background: "#d67976"
       }}>
         <Box sx={{ xs: '100vw', md: '50vw'}} display={'flex'} justifyContent={'center'}>

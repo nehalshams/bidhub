@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
 
     return (
         <>
-            { isLoggedIn ? <Outlet/> : <Navigate to={'/sign-in'}/>}
+            { isLoggedIn ? <Navigate to={'/'}/> : <Outlet/>}
         </>
     )
 }
