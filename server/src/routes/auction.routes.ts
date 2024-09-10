@@ -1,33 +1,41 @@
 import express from 'express';
 import {
-  createDomain,
-  getAllDomains,
 //   getDomainById,
-  updateDomain,
-  deleteDomain,
   placeBid,
+  createAuction,
+  updateAuction,
+  deleteAuction,
+  getAllBid,
+  getAllAuctions,
+  getAuctionDetails,
 //   getDomainBids
-} from '../controllers/domain.controller';
+} from '../controllers/auction.controller';
 
 const router = express.Router();
 
 // Create a new domain auction listing
-router.post('/', createDomain);
+router.post('/', createAuction);
 
 // Get all domain auction listings
-router.get('/', getAllDomains);
+router.get('/', getAllAuctions);
 
 // Get a specific domain auction listing by ID
 // router.get('/:domainId', getDomainById);
 
 // Update an existing domain auction listing
-router.put('/:domainId', updateDomain);
+router.put('/:auctionId', updateAuction);
 
 // Delete a domain auction listing
-router.delete('/:domainId', deleteDomain);
+router.delete('/:auctionId', deleteAuction);
+
+// get details by auction id
+router.get('/:auctionId', getAuctionDetails);
 
 // Place a bid on a domain auction
-router.post('/:domainId/bid', placeBid);
+router.post('/:auctionId/bid', placeBid);
+
+// get all bid for the particular auction id
+router.get('/:auctionId/bid', getAllBid)
 
 // Get all bids for a specific domain
 // router.get('/:domainId/bids', getDomainBids);
