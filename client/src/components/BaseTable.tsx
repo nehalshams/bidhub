@@ -105,7 +105,7 @@ function Row(props: Props) {
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -132,7 +132,7 @@ export default function BaseTable({ handlePlaceBid, auctionData }: TableProps) {
             <StyledTableCell align="right" />
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{ backgroundColor: "#e0e0e0"}}>
           {
             auctionData.length ?
               auctionData.map((row) => (

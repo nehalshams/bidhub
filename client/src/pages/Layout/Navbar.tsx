@@ -168,7 +168,8 @@ export default function Navbar(props: Props) {
           width: "auto",
           borderRadius: "4rem",
           maxWidth: '1260px',
-          margin: 'auto'
+          margin: 'auto',
+          backgroundColor: '#d67976'
         }}
         component="nav"
       >

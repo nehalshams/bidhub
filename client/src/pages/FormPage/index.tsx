@@ -100,7 +100,7 @@ export default function FormPage() {
         background: "#d67976"
       }}>
         <Box sx={{ xs: '100vw', md: '50vw'}} display={'flex'} justifyContent={'center'}>
-        <img style={{ width: '', objectFit: 'contain'}} src={Banner}/>
+        <img style={{ width: '', objectFit: 'contain'}} alt="logo" src={Banner}/>
 
         </Box>
       </Box>
@@ -111,7 +111,7 @@ export default function FormPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          background: "rgba(255, 255, 255, 0.8)",
+          background: "#e0e0e090",
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
           backdropFilter: "blur(5px)",
           zIndex: 99999999,
@@ -159,9 +159,6 @@ export default function FormPage() {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
-                    sx={{ 
-                      backgroundColor: '#fff'
-                    }}
                   />
                 </Grid>
               </>

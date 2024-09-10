@@ -63,9 +63,9 @@ export default function CreateAuction({ handleSignInModal }: Props) {
           bottom: "2rem",
         }}
       >
-        <Fab onClick={handleCreateAuctionBtn} variant="extended">
-          <AddIcon sx={{ mr: 1 }} />
-          Create Auction
+        <Fab onClick={handleCreateAuctionBtn} variant="extended" >
+          <AddIcon sx={{ mr: 1, color: '#B25A58' }} />
+          <Typography fontWeight={500} color="#B25A58">Create Auction</Typography>
         </Fab>
       </Box>
       {auctionModel && (

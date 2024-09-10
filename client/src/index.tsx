@@ -6,15 +6,28 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import AuthProvider from "./utils/AuthProvider";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+const customTheme = createTheme(
+  {
+    palette: {
+      primary: {
+        main: "#B25A58",
+      },
+    },
+  }
+)
 root.render(
   <React.StrictMode>
     <AuthProvider>
       <Provider store={store}>
-        <App />
+        <ThemeProvider theme={customTheme}>
+          <App />
+        </ThemeProvider>
       </Provider>
     </AuthProvider>
   </React.StrictMode>
