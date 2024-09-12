@@ -5,7 +5,7 @@ import Winner from "../models/winner.model";
 
 // Create a new domain auction listing (Admin only)
 export const createAuction = async (req: Request, res: Response) => {
-  const { domainName, description, startingPrice, auctionEndTime } = req.body;
+  const { domainName, description, startingPrice, auctionEndTime, userId } = req.body;
 
   try {
     const newAuction = await Auction.create({
@@ -13,6 +13,7 @@ export const createAuction = async (req: Request, res: Response) => {
       description,
       startingPrice,
       auctionEndTime,
+      createdBy: userId,
     });
     res.status(201).json({ ...newAuction, success: true });
   } catch (error) {
@@ -109,6 +110,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           startDate: { $first: "$startDate" },
           endDate: { $first: "$endDate" },
           latestBid: { $first: "$bids" },
+          startingPrice: { $first: "$startingPrice"}
         },
       },
       {
@@ -131,6 +133,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           domainName: 1,
           startDate: 1,
           endDate: 1,
+          startingPrice: 1,
           latestBid: {
             amount: 1,
             createdAt: 1,
@@ -168,11 +171,9 @@ export const placeBid = async (req: Request, res: Response) => {
 
     // Create a new bid
     const newBid = await Bid.create({ auctionId, userId, amount });
-
     // Update the domain's current price
     auction.currentPrice = amount;
     await auction.save();
-
     // Update the auction's bidHistory to include the new bid
     await Auction.findByIdAndUpdate(auctionId, {
       $push: { bidHistory: newBid._id },
@@ -252,10 +253,20 @@ export const getAuctionDetails = async (req: Request, res: Response) => {
       path: "bidHistory",
       populate: { path: "userId", select: 'email firstName lastName' },
     });
-    console.log(
-      "🚀 ~ file: auction.controller.ts:248 ~ getAuctionDetails ~ auctionDetail:",
-      auctionDetail
-    );
     res.status(200).json({ data: auctionDetail });
   } catch (error) {}
 };
+
+export const getAuctionByUserId = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  try{
+    const auctions = await Auction.find({ createdBy: userId });
+    if(!auctions.length){
+      res.status(404).json({ message: "You don't created any auction"})
+    }
+
+    res.status(200).json({ data: auctions })
+  }catch(err){
+    console.log(err)
+  }
+}

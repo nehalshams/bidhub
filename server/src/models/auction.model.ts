@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IDomain extends Document {
-  name: string;
+  domainName: string;
   description: string;
   startingPrice: number;
   currentPrice?: number;
@@ -20,7 +20,8 @@ const AuctionSchema: Schema = new Schema({
   auctionEndTime: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid'}]
+  bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid'}],
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User'}
 });
 
 export default mongoose.model<IDomain>('Auction', AuctionSchema);
