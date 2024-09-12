@@ -2,7 +2,9 @@ import { Button, Grid2, Typography } from "@mui/material";
 import React from "react";
 import BidCard from "./BidCard";
 import HistoryTable from "./HistoryTable";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetAuctionDetailQuery } from "../../api";
+import DomainCardComponent from "./DomainCard";
 const bid = {
   name: "www.abc.com",
   price: 20,
@@ -24,28 +26,46 @@ const bid = {
   ],
 };
 const BidDetail = () => {
-    const navigate = useNavigate()
-    const handleBackBtn= () => {
-        navigate('/')
-    }
+  const { id: auctionId } = useParams();
+  const { data: auctionData, isLoading } = useGetAuctionDetailQuery({
+    auctionId,
+  });
+  const navigate = useNavigate();
+  const handleBackBtn = () => {
+    navigate("/");
+  };
+
+  console.log("🚀 ~ file: index.tsx:38 ~ BidDetail ~ auctionData:", auctionData)
   return (
-    <Grid2 container justifyContent={'center'} alignItems={'center'} spacing={'1rem'} padding={'1rem'}>
-      <Grid2 size={{ xs: 12, md: 4 }}>
-        <Typography>Auction Details</Typography>
-        {/* <BidCard data={bid} /> */}
-      </Grid2>
-      <Grid2 size={{ xs: 12, md: 4 }} >
-      <Typography>Domain Details</Typography>
-        {/* <BidCard data={bid} /> */}
-      </Grid2>
+    <Grid2
+      container
+      justifyContent={"center"}
+      alignItems={"center"}
+      spacing={"1rem"}
+      padding={"1rem"}
+    >
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <Grid2 size={{ xs: 12, md: 4 }}>
+            <Typography>Auction Details</Typography>
+            <BidCard data={auctionData.data} />
+          </Grid2>
+          <Grid2 size={{ xs: 12, md: 4 }}>
+            <Typography>Domain Details</Typography>
+            <DomainCardComponent data={auctionData.data}/>
+          </Grid2>
 
-      <Grid2 size={{ xs: 12, md: 8}}>
-        <HistoryTable/>
-      </Grid2>
+          <Grid2 size={{ xs: 12, md: 8 }}>
+            <HistoryTable bidHistory={auctionData.data.bidHistory} />
+          </Grid2>
+        </>
+      )}
 
-      <Grid2 size={{ xs: 12, md: 8}}>
+      <Grid2 size={{ xs: 12, md: 8 }}>
         <Button onClick={handleBackBtn} variant="contained">
-            Back
+          Back
         </Button>
       </Grid2>
     </Grid2>

@@ -13,7 +13,7 @@ export type Bid = {
     updatedAt: string;
     bid: number;
     _id: string;
-    history: {
+    bidHistory: {
       date: string;
       bidderName: string;
       price: number;
@@ -33,6 +33,8 @@ export type HistoryType = {
 
 export type CardDataType = {
     heading: string;
+    endDate: string;
+    startingPrice: number;
 }
 export type Option = {
     name: string;

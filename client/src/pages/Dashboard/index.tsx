@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, CircularProgress, TextField } from "@mui/material";
 import Layout from "../Layout";
 import Navbar from "../Layout/Navbar";
 // import BaseTable, { Bid } from "../../components/BaseTable";
@@ -15,14 +15,16 @@ import CustomModal from "../../components/CustomModal";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const { isAuthenticated, } = useContext(AuthContext)
-  const navigate = useNavigate()
+  const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
   const [searchQuery, setSearchQuery] = useState("");
   const [signInModal, setSignInModal] = useState(false);
-  const { data: auctionData, isLoading } = useGetAuctionsQuery({ domainName: searchQuery })
+  const { data: auctionData, isLoading } = useGetAuctionsQuery({
+    domainName: searchQuery,
+  });
 
   const handlePlaceBid = (data: Bid) => {
     // console.log("handlePlaceBid", id);
@@ -30,21 +32,21 @@ const Dashboard = () => {
       setRowData(data);
       setBidModal(true);
     } else {
-      // 
+      setSignInModal(!signInModal)
     }
   };
 
-  function handleSignInBtn(){
-    navigate('/sign-in')
+  function handleSignInBtn() {
+    navigate("/sign-in");
   }
 
   const handleSignInModal = () => {
-    setSignInModal(!signInModal)
-  }
+    setSignInModal(!signInModal);
+  };
 
-  const handleConfirm = () => { };
+  const handleConfirm = () => {};
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
+    setSearchQuery(e.target.value);
   };
   return (
     <Layout>
@@ -60,7 +62,7 @@ const Dashboard = () => {
           }}
         >
           <Box>
-            <Box display={'flex'} gap={'.5rem'} mt={'3rem'} mb={'1rem'}>
+            <Box display={"flex"} gap={".5rem"} mt={"3rem"} mb={"1rem"}>
               <TextField
                 onChange={handleSearch}
                 required
@@ -71,11 +73,14 @@ const Dashboard = () => {
               />
               <Dropdown options={domainType} label="Domain Type" />
             </Box>
-            {
-              isLoading ? ""
-                :
-                <BaseTable auctionData={auctionData || []} handlePlaceBid={handlePlaceBid} />
-            }
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <BaseTable
+                auctionData={auctionData || []}
+                handlePlaceBid={handlePlaceBid}
+              />
+            )}
           </Box>
         </Box>
         <CreateAuction handleSignInModal={handleSignInModal} />
@@ -87,19 +92,17 @@ const Dashboard = () => {
             handleConfirm={handleConfirm}
           />
         )}
-        {
-          signInModal && (
-            <CustomModal
-              open={signInModal}
-              handleClose={handleSignInModal}
-              primaryBtn="Go to Sign In"
-              title="Need Sign In"
-              handlePrimaryAction={handleSignInBtn}
-            >
-              {'Before taking an action need to do sign in first.'}
-            </CustomModal>
-          )
-        }
+        {signInModal && (
+          <CustomModal
+            open={signInModal}
+            handleClose={handleSignInModal}
+            primaryBtn="Go to Sign In"
+            title="Need Sign In"
+            handlePrimaryAction={handleSignInBtn}
+          >
+            {"Before taking any action need to do sign in first."}
+          </CustomModal>
+        )}
       </>
     </Layout>
   );

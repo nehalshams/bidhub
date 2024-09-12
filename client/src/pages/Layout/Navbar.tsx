@@ -21,6 +21,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../utils/AuthProvider";
+import Logo from "../../icons/logo.svg";
 
 interface Props {
   /**
@@ -34,8 +36,9 @@ const drawerWidth = 240;
 const navItems = ["Home", "About", "Contact"];
 
 export default function Navbar(props: Props) {
+  const { isAuthenticated } = React.useContext(AuthContext);
   const { window } = props;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -56,8 +59,28 @@ export default function Navbar(props: Props) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate(0)
+    localStorage.removeItem("token");
+    navigate(0);
+  };
+
+  const handleSignInBtn = () => {
+    navigate("/sign-in");
+  };
+
+  const handleNavItem = (nav: string) => {
+    const pageNavigation = {
+      Contact: () => navigate('/contact'),
+      Home: () => navigate('/home'),
+      About: () => navigate('/about'),
+      Profile: () =>{ 
+        const user = localStorage.getItem('user')
+        const userObj = JSON.parse(user || "")
+        const userId = userObj._id;
+        handleCloseProfile()
+        return navigate(`/${userId}`)
+      }
+    }[nav]
+    pageNavigation?.()
   }
 
   const renderMobileMenu = (
@@ -153,7 +176,7 @@ export default function Navbar(props: Props) {
       open={Boolean(anchorEl)}
       onClose={handleCloseProfile}
     >
-      <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
+      <MenuItem onClick={() => handleNavItem('Profile')}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -167,9 +190,9 @@ export default function Navbar(props: Props) {
           right: { xs: ".5rem", md: "3rem" },
           width: "auto",
           borderRadius: "4rem",
-          maxWidth: '1260px',
-          margin: 'auto',
-          backgroundColor: '#d67976'
+          maxWidth: "1260px",
+          margin: "auto",
+          backgroundColor: "#d67976",
         }}
         component="nav"
       >
@@ -183,46 +206,70 @@ export default function Navbar(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div">
-            BidHub
-          </Typography>
-          <Box sx={{ display: { xs: "none", sm: "flex" }, width: '35%', justifyContent: 'space-evenly' }}>
+          <IconButton
+            size="large"
+            aria-label="show 4 new mails"
+            color="inherit"
+          >
+            <Badge sx={{ mt: '-6px'}} color="error">
+              <img src={Logo} alt="logo" />
+            </Badge>
+            <Typography variant="h6" component="div">
+              BidHub
+            </Typography>
+          </IconButton>
+          <Box
+            sx={{
+              display: { xs: "none", sm: "flex" },
+              width: "35%",
+              justifyContent: "space-evenly",
+            }}
+          >
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
+              <Button onClick={() => handleNavItem(item)} key={item} sx={{ color: "#fff" }}>
                 {item}
               </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 1 }} />
+
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            {isAuthenticated ? (
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                >
+                  <Badge badgeContent={4} color="error">
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="large"
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </>
+            ) : (
+              <Button onClick={handleSignInBtn} sx={{ color: "#fff" }}>
+                Sign In
+              </Button>
+            )}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
