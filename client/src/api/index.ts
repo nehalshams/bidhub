@@ -40,8 +40,8 @@ export const api = createApi({
       invalidatesTags: ["Auction"],
     }),
     getAuctions: builder.query({
-      query: ({ domainName }) => {
-        return `/auctions?name=${domainName || ""}`;
+      query: ({ domainName, userId }) => {
+        return userId ? `/auctions/users/${userId}` :  `/auctions?name=${domainName || ""}`;
       },
       providesTags: ["Auction"],
     }),

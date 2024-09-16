@@ -265,7 +265,7 @@ export const getAuctionByUserId = async (req: Request, res: Response) => {
       res.status(404).json({ message: "You don't created any auction"})
     }
 
-    res.status(200).json({ data: auctions })
+    res.status(200).json( auctions)
   }catch(err){
     console.log(err)
   }

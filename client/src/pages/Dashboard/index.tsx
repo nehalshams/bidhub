@@ -12,11 +12,12 @@ import CreateAuction from "./CreateAuction";
 import { useGetAuctionsQuery } from "../../api";
 import { AuthContext } from "../../utils/AuthProvider";
 import CustomModal from "../../components/CustomModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Dashboard = () => {
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { userId } = useParams()
 
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const [signInModal, setSignInModal] = useState(false);
   const { data: auctionData, isLoading } = useGetAuctionsQuery({
     domainName: searchQuery,
+    userId
   });
 
   const handlePlaceBid = (data: Bid) => {
