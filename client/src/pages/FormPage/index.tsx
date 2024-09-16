@@ -50,6 +50,7 @@ export default function FormPage() {
       localStorage.setItem('token', resp.data.token)
       localStorage.setItem('user', JSON.stringify(resp.data.user))
       navigate('/')
+      window.location.reload()
     }else {
       toast.error('Something went wrong')
     }

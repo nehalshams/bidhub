@@ -63,7 +63,7 @@ const Dashboard = () => {
             flexDirection: "column",
           }}
         >
-          <Box>
+          <Box sx={{ height: '70vh'}}>
             <Box display={"flex"} gap={".5rem"} mt={"3rem"} mb={"1rem"}>
               <TextField
                 onChange={handleSearch}

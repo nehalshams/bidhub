@@ -26,7 +26,7 @@ const HistoryTable = ({ bidHistory}: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {bidHistory?.map((historyRow) => (
+        {bidHistory?.map((historyRow: any) => (
           <TableRow key={historyRow.date}>
             <StyledTableCell component="th" scope="row">
               {dayjs(historyRow.createdAt).format('MM/DD/YYYY')}
