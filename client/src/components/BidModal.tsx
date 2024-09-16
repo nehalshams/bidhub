@@ -65,7 +65,7 @@ const BidModal = ({ data, open, handleClose }: Props) => {
                 sx={{
                   marginLeft: "3rem",
                 }}
-                label={`by ${data?.history?.[0]?.bidderName}`}
+                label={`by ${data?.bidHistory?.[0]?.bidderName || "unknown"}`}
               />
             </Typography>
           </Box>
