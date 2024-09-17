@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Auction from "../models/auction.model";
 import Bid from "../models/bid.model";
 import Winner from "../models/winner.model";
+import User from "../models/user.model";
 
 // Create a new domain auction listing (Admin only)
 export const createAuction = async (req: Request, res: Response) => {
@@ -74,6 +75,7 @@ export const getDomain = async (req: Request, res: Response) => {
 // Get all domain auction listings
 export const getAllAuctions = async (req: Request, res: Response) => {
   const { name = "" } = req.query;
+  const { userId } = req.body;
   if (typeof name !== "string") {
     return res.status(400).json({ message: "Invalid query parameter" });
   }
@@ -110,7 +112,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           startDate: { $first: "$startDate" },
           endDate: { $first: "$endDate" },
           latestBid: { $first: "$bids" },
-          startingPrice: { $first: "$startingPrice"}
+          startingPrice: { $first: "$startingPrice" }
         },
       },
       {
@@ -143,7 +145,17 @@ export const getAllAuctions = async (req: Request, res: Response) => {
       },
     ]);
 
-    res.json(auctions);
+
+    // Get the user's bookmarks
+    const user = await User.findById(userId).select('bookmarks');
+    const userBookmarks = user ? user.bookmarks.map(String) : []; // Convert ObjectIds to strings
+
+    // Manually add isBookmarked field
+    const auctionList = auctions.map(auction => ({
+      ...auction,
+      isBookmarked: userBookmarks.includes(auction._id.toString()), // Check if auction is bookmarked
+    }));
+    res.json(auctionList);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -254,19 +266,19 @@ export const getAuctionDetails = async (req: Request, res: Response) => {
       populate: { path: "userId", select: 'email firstName lastName' },
     });
     res.status(200).json({ data: auctionDetail });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const getAuctionByUserId = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  try{
+  try {
     const auctions = await Auction.find({ createdBy: userId });
-    if(!auctions.length){
-      res.status(404).json({ message: "You don't created any auction"})
+    if (!auctions.length) {
+      res.status(404).json({ message: "You don't created any auction" })
     }
 
     res.status(200).json({ data: auctions })
-  }catch(err){
+  } catch (err) {
     console.log(err)
   }
 }

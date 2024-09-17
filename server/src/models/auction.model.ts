@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, SchemaType } from 'mongoose';
 
-export interface IDomain extends Document {
+export interface IAuction extends Document {
+  _id: string,
   domainName: string;
   description: string;
   startingPrice: number;
@@ -24,4 +25,16 @@ const AuctionSchema: Schema = new Schema({
   createdBy: { type: Schema.Types.ObjectId, ref: 'User'}
 });
 
-export default mongoose.model<IDomain>('Auction', AuctionSchema);
+// Adding virtual field for isBookmarked
+AuctionSchema.virtual('isBookmarked').get(function (this: IAuction, userBookmarks: string[]): boolean {
+  console.log("🚀 ~ userBookmarks:", userBookmarks)
+  // Check if this auction's _id exists in the user's bookmarks
+  return userBookmarks.includes(this._id.toString());
+});
+
+
+AuctionSchema.set('toObject', { virtuals: true });
+AuctionSchema.set('toJSON', { virtuals: true });
+
+const Auction = mongoose.model<IAuction>('Auction', AuctionSchema);
+export default Auction; 
