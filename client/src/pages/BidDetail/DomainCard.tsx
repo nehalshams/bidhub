@@ -5,12 +5,13 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Bid, CardDataType } from "../types/bid.type";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-export default function AuctionCardComponent({ domainName, auctionEndTime, startingPrice, currentPrice }: Partial<Bid>) {
-
+export default function DomainCardComponent({ data }: any) {
+    console.log("🚀 ~ file: DomainCard.tsx:12 ~ DomainCardComponent ~ data:", data)
+    const{ domainName } = data
+  
   const navigate = useNavigate()
   return (
     <Box sx={{ minWidth: 275 }}>
@@ -21,14 +22,11 @@ export default function AuctionCardComponent({ domainName, auctionEndTime, start
               {domainName}
             </Typography>
             <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-              Auction end date: {dayjs(auctionEndTime).format('MM/DD/YYYY')}
+              {/* Auction end date: {dayjs("").format('MM/DD/YYYY')} */}
             </Typography>
             <Typography variant="body2">
-              Current Price: {currentPrice}
-            </Typography>
-            <Typography variant="body2">
-              Starting price: {startingPrice}
-              <br />
+              {/* Starting price: {""}
+              <br /> */}
             </Typography>
           </CardContent>
           <CardActions>

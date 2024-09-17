@@ -2,6 +2,7 @@ import React from "react";
 import { StyledTableCell } from "../../components/BaseTable";
 import {
   Box,
+  CircularProgress,
   Collapse,
   Table,
   TableBody,
@@ -25,11 +26,11 @@ const History = ({ open, auctionId }: Props) => {
   return (
     <TableRow>
       {isLoading ? (
-        ""
+        <CircularProgress/>
       ) : (
         <StyledTableCell
           style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={6}
+          colSpan={68}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>

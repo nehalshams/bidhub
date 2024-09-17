@@ -1,6 +1,6 @@
 import React from 'react'
-import CardComponent from '../../components/CardComponent'
 import { Bid } from '../../types/bid.type'
+import AuctionCardComponent from '../../components/CardComponent';
 
 type Props = {
   data: Bid;
@@ -8,7 +8,7 @@ type Props = {
 const BidCard = ({ data }: Props) => {
   return (
     <div>
-        <CardComponent heading={data.domainName}/>
+        <AuctionCardComponent {...data}/>
     </div>
   )
 }

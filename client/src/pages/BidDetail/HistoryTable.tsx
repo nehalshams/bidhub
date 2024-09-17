@@ -2,8 +2,13 @@ import React from 'react'
 import { StyledTableCell } from '../../components/BaseTable'
 import { Box, Table, TableBody, TableHead, TableRow, Typography } from '@mui/material'
 import { bidData } from '../../data'
-const history = bidData[0].history
-const HistoryTable = () => {
+import dayjs from 'dayjs'
+
+type Props = {
+  bidHistory: any
+}
+const HistoryTable = ({ bidHistory}: Props) => {
+  console.log("🚀 ~ file: HistoryTable.tsx:10 ~ HistoryTable ~ bidHistory:", bidHistory)
   return (
     <Box sx={{ margin: 1 }}>
     <Typography variant="h6" gutterBottom component="div">
@@ -21,17 +26,17 @@ const HistoryTable = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {history.map((historyRow) => (
+        {bidHistory?.map((historyRow: any) => (
           <TableRow key={historyRow.date}>
             <StyledTableCell component="th" scope="row">
-              {historyRow.date}
+              {dayjs(historyRow.createdAt).format('MM/DD/YYYY')}
             </StyledTableCell>
             <StyledTableCell component="th" scope="row">
-              {historyRow.bidderName}
+              {historyRow.userId.firstName} {historyRow.userId.lastName}
             </StyledTableCell>
             {/* <StyledTableCell>{historyRow.customerId}</StyledTableCell> */}
             <StyledTableCell align="right">
-              {historyRow.price}
+              {historyRow.amount}
             </StyledTableCell>
             <StyledTableCell align="right">
               {historyRow.total}

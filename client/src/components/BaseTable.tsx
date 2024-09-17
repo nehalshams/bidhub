@@ -60,6 +60,10 @@ function Row(props: Props) {
   const handleBidDetails = (id: string) => {
     navigate(`/bid/${id}`);
   };
+
+  const handleFavorite = (id: string) => {
+    setIsFavorite(!isFavorite)
+  }
   return (
     <React.Fragment>
       <TableRow
@@ -79,15 +83,15 @@ function Row(props: Props) {
             {row.domainName}
           </Button>
         </StyledTableCell>
-        <StyledTableCell align="right">{row.latestBid.amount || row.startingPrice}</StyledTableCell>
+        <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
         <StyledTableCell align="right">{row.bid}</StyledTableCell>
         <StyledTableCell align="right"></StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
 
         <StyledTableCell align="right">
-          <Button onClick={() => handleBidClick(row)} variant="contained">
-            {isFavorite ? <FavoriteBorderIcon /> : <FavoriteIcon />}
+          <Button onClick={() => handleFavorite(row._id)} variant="text">
+            {!isFavorite ? <FavoriteBorderIcon /> : <FavoriteIcon />}
           </Button>
         </StyledTableCell>
         <StyledTableCell align="right">
