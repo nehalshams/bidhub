@@ -118,7 +118,7 @@ function Row(props: Props) {
           </Button>
         </StyledTableCell>
         <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
-        <StyledTableCell align="right">{row.bid}</StyledTableCell>
+        <StyledTableCell align="right">{row.totalBids}</StyledTableCell>
         <StyledTableCell align="right">{time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}

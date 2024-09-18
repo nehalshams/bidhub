@@ -11,7 +11,7 @@ export type Bid = {
     status: string;
     createdAt: string;
     updatedAt: string;
-    bid: number;
+    totalBids: number;
     _id: string;
     isBookmarked: boolean;
     bidHistory: {
