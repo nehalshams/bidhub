@@ -27,9 +27,8 @@ const AuctionSchema: Schema = new Schema({
 
 // Adding virtual field for isBookmarked
 AuctionSchema.virtual('isBookmarked').get(function (this: IAuction, userBookmarks: string[]): boolean {
-  console.log("🚀 ~ userBookmarks:", userBookmarks)
   // Check if this auction's _id exists in the user's bookmarks
-  return userBookmarks.includes(this._id.toString());
+  return userBookmarks?.includes(this._id.toString());
 });
 
 
