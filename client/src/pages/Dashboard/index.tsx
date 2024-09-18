@@ -19,7 +19,7 @@ const Dashboard = () => {
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const { userId } = useParams();
-  const user = getUser()._id
+  const user = getUser()?._id
 
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
