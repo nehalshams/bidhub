@@ -147,7 +147,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
 
 
     // Get the user's bookmarks
-    const user = await User.findById(userId).select('bookmarks');
+    const user = userId ? await User.findById(userId).select('bookmarks') : null;
     const userBookmarks = user ? user.bookmarks.map(String) : []; // Convert ObjectIds to strings
 
     // Manually add isBookmarked field
