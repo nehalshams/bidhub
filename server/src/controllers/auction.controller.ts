@@ -151,7 +151,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
     const userBookmarks = user ? user.bookmarks.map(String) : []; // Convert ObjectIds to strings
 
     // Manually add isBookmarked field
-    const auctionList = auctions.map(auction => ({
+    const auctionList = !user ? auctions : auctions.map(auction => ({
       ...auction,
       isBookmarked: userBookmarks.includes(auction._id.toString()), // Check if auction is bookmarked
     }));
