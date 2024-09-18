@@ -1,10 +1,11 @@
-import { Button, Grid2, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid2, Typography } from "@mui/material";
 import React from "react";
 import BidCard from "./BidCard";
 import HistoryTable from "./HistoryTable";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetAuctionDetailQuery } from "../../api";
 import DomainCardComponent from "./DomainCard";
+import LanguageIcon from '@mui/icons-material/Language';
 const bid = {
   name: "www.abc.com",
   price: 20,
@@ -44,9 +45,12 @@ const BidDetail = () => {
       padding={"1rem"}
     >
       {isLoading ? (
-        <></>
+        <Box flex={1}><CircularProgress/></Box>
       ) : (
         <>
+          <Box width={'100%'} display={'flex'} justifyContent={'center'}>
+            <Typography variant="h3" color="primary"><LanguageIcon fontSize="large"/> {auctionData?.data.domainName}</Typography>
+          </Box>
           <Grid2 size={{ xs: 12, md: 4 }}>
             <Typography>Auction Details</Typography>
             <BidCard data={auctionData?.data} />

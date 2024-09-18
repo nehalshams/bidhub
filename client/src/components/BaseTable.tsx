@@ -168,7 +168,7 @@ type TableProps = {
 };
 export default function BaseTable({ handlePlaceBid, auctionData, handleUnauthorizeClick }: TableProps) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{ maxHeight: '70vh'}} component={Paper}>
       <Table size="small" aria-label="collapsible table">
         <TableHead>
           <TableRow>
