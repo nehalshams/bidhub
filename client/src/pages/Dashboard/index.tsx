@@ -1,4 +1,4 @@
-import { Box, CircularProgress, TextField } from "@mui/material";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import Layout from "../Layout";
 import Navbar from "../Layout/Navbar";
 // import BaseTable, { Bid } from "../../components/BaseTable";
@@ -26,7 +26,7 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [signInModal, setSignInModal] = useState(false);
   const [domain, setDomain] = useState("")
-  const { data: auctionData, isLoading, isFetching } = useGetAuctionsQuery({
+  const { data: auctionData, isLoading, isFetching, error } = useGetAuctionsQuery({
     domainName: searchQuery,
     userId,
     user
@@ -54,10 +54,12 @@ const Dashboard = () => {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
-  const handleDomainType = (value: string| null) => {
+  const handleDomainType = (value: string | null) => {
     setSearchQuery(value || "")
-    setDomain(value|| "")
+    setDomain(value || "")
   }
+  let err = error as any 
+  err = err?.error
   return (
     <Layout>
       <>
@@ -87,13 +89,14 @@ const Dashboard = () => {
             </Box>
             {isLoading || isFetching ? (
               <Box display={'flex'} justifyContent={'center'}><CircularProgress /></Box>
-            ) : (
+            ) : err ? <Typography>{err}</Typography>
+              :
               <BaseTable
                 auctionData={auctionData || []}
                 handlePlaceBid={handlePlaceBid}
                 handleUnauthorizeClick={handleSignInModal}
               />
-            )}
+            }
           </Box>
         </Box>
         <CreateAuction handleSignInModal={handleSignInModal} />

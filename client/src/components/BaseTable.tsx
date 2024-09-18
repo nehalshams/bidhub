@@ -20,7 +20,7 @@ import { Bid } from "../types/bid.type";
 import History from "../pages/Dashboard/History";
 import EmptyComponent from "./EmptyComponent";
 import { useAddBookmarkMutation, useRemoveBookmarkMutation } from "../api";
-import { getUser } from "../utils/helper";
+import { getRemainingTime, getUser } from "../utils/helper";
 import { toast } from "react-toastify";
 
 // function createData(
@@ -68,6 +68,7 @@ function Row(props: Props) {
   const [addBookmark] = useAddBookmarkMutation()
   const [removeBookmark] = useRemoveBookmarkMutation()
 
+  const time = React.useMemo(() => getRemainingTime(new Date().toISOString(), row.auctionEndTime), [])
 
   const handleBidDetails = (id: string) => {
     navigate(`/bid/${id}`);
@@ -118,7 +119,7 @@ function Row(props: Props) {
         </StyledTableCell>
         <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
         <StyledTableCell align="right">{row.bid}</StyledTableCell>
-        <StyledTableCell align="right"></StyledTableCell>
+        <StyledTableCell align="right">{time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
 
@@ -128,7 +129,7 @@ function Row(props: Props) {
           </Button>
         </StyledTableCell>
         <StyledTableCell align="right">
-          <Button onClick={() => handleBidClick(row)} variant="contained">
+          <Button disabled={time === 'Expired'} onClick={() => handleBidClick(row)} variant="contained">
             Bid Now
           </Button>
         </StyledTableCell>

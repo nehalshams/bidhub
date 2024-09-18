@@ -27,6 +27,8 @@ export default function FormPage() {
     email: "",
     password: "",
   });
+  const { firstName, lastName, email, password } = formField;
+
   const [signupUser] = useSignupUserMutation();
   const [loginUser] = useLoginUserMutation();
 
@@ -66,8 +68,10 @@ export default function FormPage() {
     } else if (!isSigninForm && firstName && lastName && email && password) {
       const isValid = formValidator(formField);
       if (isValid) {
+        console.log("🚀 ~ handleSubmit ~ isValid:", isValid)
         const resp = await signupUser(formField);
         setIsSigninForm(true);
+        toast.success('Account created successfully.')
         setFormField({
           firstName: "",
           lastName: "",
@@ -75,7 +79,7 @@ export default function FormPage() {
           password: "",
         });
       } else {
-        // toas
+        toast.error('form is not valid.')
       }
     } else {
       alert("Not allowed");
@@ -150,6 +154,7 @@ export default function FormPage() {
                     label="First Name"
                     autoFocus
                     size="small"
+                    value={firstName}
                   />
                 </Grid>
                 <Grid size={{ md: 6 }}>
@@ -162,7 +167,7 @@ export default function FormPage() {
                     name="lastName"
                     autoComplete="family-name"
                     size="small"
-
+                    value={lastName}
                   />
                 </Grid>
               </>
@@ -177,7 +182,7 @@ export default function FormPage() {
                 name="email"
                 autoComplete="email"
                 size="small"
-
+                value={email}
               />
             </Grid>
             <Grid size={12}>
@@ -191,7 +196,7 @@ export default function FormPage() {
                 id="password"
                 autoComplete="new-password"
                 size="small"
-
+                value={password}
               />
             </Grid>
             <Grid>
@@ -207,7 +212,7 @@ export default function FormPage() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-          // onClick={handleFormSubmit}
+            // onClick={handleFormSubmit}
           >
             {isSigninForm ? "Sign In" : "Sign up"}
           </Button>
