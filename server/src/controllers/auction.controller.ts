@@ -74,8 +74,8 @@ export const getDomain = async (req: Request, res: Response) => {
 
 // Get all domain auction listings
 export const getAllAuctions = async (req: Request, res: Response) => {
-  const { name = "" } = req.query;
-  const { userId } = req.body;
+  const { name = "", userId } = req.query;
+
   if (typeof name !== "string") {
     return res.status(400).json({ message: "Invalid query parameter" });
   }
@@ -110,7 +110,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           _id: "$_id",
           domainName: { $first: "$domainName" },
           startDate: { $first: "$startDate" },
-          endDate: { $first: "$endDate" },
+          auctionEndTime: { $first: "$auctionEndTime" },
           latestBid: { $first: "$bids" },
           startingPrice: { $first: "$startingPrice" }
         },
@@ -134,7 +134,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           _id: 1,
           domainName: 1,
           startDate: 1,
-          endDate: 1,
+          auctionEndTime: 1,
           startingPrice: 1,
           latestBid: {
             amount: 1,
@@ -155,7 +155,8 @@ export const getAllAuctions = async (req: Request, res: Response) => {
       ...auction,
       isBookmarked: userBookmarks.includes(auction._id.toString()), // Check if auction is bookmarked
     }));
-    res.json(auctionList);
+
+    res.status(200).json(auctionList);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -279,6 +280,7 @@ export const getAuctionByUserId = async (req: Request, res: Response) => {
 
     res.status(200).json( auctions)
   }catch(err){
+    res.status(400).json({message: 'Server error'})
     console.log(err)
   }
 }
