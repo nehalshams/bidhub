@@ -19,6 +19,9 @@ import { useNavigate } from "react-router-dom";
 import { Bid } from "../types/bid.type";
 import History from "../pages/Dashboard/History";
 import EmptyComponent from "./EmptyComponent";
+import { useAddBookmarkMutation, useRemoveBookmarkMutation } from "../api";
+import { getRemainingTime, getUser } from "../utils/helper";
+import { toast } from "react-toastify";
 
 // function createData(
 //   name: string,
@@ -50,23 +53,54 @@ import EmptyComponent from "./EmptyComponent";
 //   };
 // }
 
-type Props = { row: Bid; handleBidClick: (bid: Bid) => void };
+type Props = {
+  row: Bid;
+  handleBidClick: (bid: Bid) => void;
+  handleUnauthorizeClick: () => void;
+};
+
 function Row(props: Props) {
-  const { row, handleBidClick } = props;
+  const user = getUser()
+  const { row, handleBidClick, handleUnauthorizeClick } = props;
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const [isFavorite, setIsFavorite] = React.useState(false);
+  const [isFavorite, setIsFavorite] = React.useState(row.isBookmarked);
+  const [addBookmark] = useAddBookmarkMutation()
+  const [removeBookmark] = useRemoveBookmarkMutation()
+
+  const time = React.useMemo(() => getRemainingTime(new Date().toISOString(), row.auctionEndTime), [])
 
   const handleBidDetails = (id: string) => {
     navigate(`/bid/${id}`);
   };
 
-  const handleFavorite = (id: string) => {
-    setIsFavorite(!isFavorite)
+  const handleFavorite = async (id: string) => {
+    if (user) {
+      const params = {
+        auctionId: id,
+        userId: user._id
+      }
+      if (!isFavorite) {
+        const resp = await addBookmark(params)
+        if (resp.data) {
+          setIsFavorite(true)
+          toast.success('Bookmark added successfully')
+        }
+      } else {
+        removeBookmark(params)
+          .then(() => {
+            setIsFavorite(false)
+            toast.success('Bookmark removed successfully.')
+          })
+          .catch(() => toast.error('Something went wrong'))
+      }
+    } else {
+      handleUnauthorizeClick()
+    }
   }
   return (
     <React.Fragment>
-      <TableRow
+      <StyledTableRow
         sx={{ "& > *": { borderBottom: "unset", backgroud: "primary.main" } }}
       >
         <StyledTableCell>
@@ -85,7 +119,7 @@ function Row(props: Props) {
         </StyledTableCell>
         <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
         <StyledTableCell align="right">{row.bid}</StyledTableCell>
-        <StyledTableCell align="right"></StyledTableCell>
+        <StyledTableCell align="right">{time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
 
@@ -95,11 +129,11 @@ function Row(props: Props) {
           </Button>
         </StyledTableCell>
         <StyledTableCell align="right">
-          <Button onClick={() => handleBidClick(row)} variant="contained">
+          <Button disabled={time === 'Expired'} onClick={() => handleBidClick(row)} variant="contained">
             Bid Now
           </Button>
         </StyledTableCell>
-      </TableRow>
+      </StyledTableRow>
       {open && (
         <History auctionId={row._id} open={open} />
       )}
@@ -117,14 +151,25 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
 type TableProps = {
   handlePlaceBid: (id: Bid) => void;
   auctionData: Bid[];
+  handleUnauthorizeClick: () => void
 };
-export default function BaseTable({ handlePlaceBid, auctionData }: TableProps) {
+export default function BaseTable({ handlePlaceBid, auctionData, handleUnauthorizeClick }: TableProps) {
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
+      <Table size="small" aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <StyledTableCell />
@@ -136,13 +181,13 @@ export default function BaseTable({ handlePlaceBid, auctionData }: TableProps) {
             <StyledTableCell align="right" />
           </TableRow>
         </TableHead>
-        <TableBody sx={{ backgroundColor: "#e0e0e0"}}>
+        <TableBody>
           {
             auctionData.length ?
               auctionData.map((row) => (
-                <Row key={row._id} row={row} handleBidClick={handlePlaceBid} />
+                <Row key={row._id} row={row} handleBidClick={handlePlaceBid} handleUnauthorizeClick={handleUnauthorizeClick} />
               ))
-              : <td colSpan={7}><EmptyComponent> There is no auction is going on </EmptyComponent></td>
+              : <td colSpan={7}><EmptyComponent> There is no auction available </EmptyComponent></td>
 
           }
         </TableBody>

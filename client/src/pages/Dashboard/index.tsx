@@ -1,4 +1,4 @@
-import { Box, CircularProgress, TextField } from "@mui/material";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import Layout from "../Layout";
 import Navbar from "../Layout/Navbar";
 // import BaseTable, { Bid } from "../../components/BaseTable";
@@ -13,19 +13,23 @@ import { useGetAuctionsQuery } from "../../api";
 import { AuthContext } from "../../utils/AuthProvider";
 import CustomModal from "../../components/CustomModal";
 import { useNavigate, useParams } from "react-router-dom";
+import { getUser } from "../../utils/helper";
 
 const Dashboard = () => {
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { userId } = useParams()
+  const { userId } = useParams();
+  const user = getUser()?._id || ""
 
   const [bidModal, setBidModal] = useState<boolean>();
   const [rowData, setRowData] = useState<Bid>();
   const [searchQuery, setSearchQuery] = useState("");
   const [signInModal, setSignInModal] = useState(false);
-  const { data: auctionData, isLoading } = useGetAuctionsQuery({
+  const [domain, setDomain] = useState("")
+  const { data: auctionData, isLoading, isFetching, error } = useGetAuctionsQuery({
     domainName: searchQuery,
-    userId
+    userId,
+    user
   });
 
   const handlePlaceBid = (data: Bid) => {
@@ -46,10 +50,16 @@ const Dashboard = () => {
     setSignInModal(!signInModal);
   };
 
-  const handleConfirm = () => {};
+  const handleConfirm = () => { };
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+  const handleDomainType = (value: string | null) => {
+    setSearchQuery(value || "")
+    setDomain(value || "")
+  }
+  let err = error as any 
+  err = err?.error
   return (
     <Layout>
       <>
@@ -63,7 +73,7 @@ const Dashboard = () => {
             flexDirection: "column",
           }}
         >
-          <Box sx={{ height: '70vh'}}>
+          <Box sx={{ height: '70vh' }} >
             <Box display={"flex"} gap={".5rem"} mt={"3rem"} mb={"1rem"}>
               <TextField
                 onChange={handleSearch}
@@ -72,17 +82,21 @@ const Dashboard = () => {
                 id="password"
                 autoComplete="new-password"
                 label="Auction Search"
+                size="small"
+
               />
-              <Dropdown options={domainType} label="Domain Type" />
+              <Dropdown value={domain} handleChange={handleDomainType} options={domainType} label="Domain Type" />
             </Box>
-            {isLoading ? (
-              <CircularProgress />
-            ) : (
+            {isLoading || isFetching ? (
+              <Box display={'flex'} justifyContent={'center'}><CircularProgress /></Box>
+            ) : err ? <Typography>{err}</Typography>
+              :
               <BaseTable
                 auctionData={auctionData || []}
                 handlePlaceBid={handlePlaceBid}
+                handleUnauthorizeClick={handleSignInModal}
               />
-            )}
+            }
           </Box>
         </Box>
         <CreateAuction handleSignInModal={handleSignInModal} />

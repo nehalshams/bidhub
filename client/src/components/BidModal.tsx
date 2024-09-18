@@ -88,6 +88,7 @@ const BidModal = ({ data, open, handleClose }: Props) => {
               InputLabelProps={{ shrink: true }}
               label="$"
               onChange={(e) => setBidPrice(Number(e.target.value))}
+              size="small"
             />
           </Box>
         </DialogContentText>

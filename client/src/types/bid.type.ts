@@ -13,6 +13,7 @@ export type Bid = {
     updatedAt: string;
     bid: number;
     _id: string;
+    isBookmarked: boolean;
     bidHistory: {
       date: string;
       bidderName: string;

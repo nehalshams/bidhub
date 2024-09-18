@@ -101,6 +101,4 @@ export const bidData = [
   },
 ];
 
-export const domainType = [
-
-]
+export const domainType = ['.net', '.mov', '.com', '.in', '.in.com', '.co.uk', '.org']
