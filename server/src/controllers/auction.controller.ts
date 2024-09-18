@@ -95,6 +95,11 @@ export const getAllAuctions = async (req: Request, res: Response) => {
         },
       },
       {
+        $addFields: {
+          totalBids: { $size: "$bids" }, // Count total number of bids for each auction
+        },
+      },
+      {
         $unwind: {
           path: "$bids",
           preserveNullAndEmptyArrays: true,
@@ -112,6 +117,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           startDate: { $first: "$startDate" },
           auctionEndTime: { $first: "$auctionEndTime" },
           latestBid: { $first: "$bids" },
+          totalBids: { $first: "$totalBids" }, 
           startingPrice: { $first: "$startingPrice" }
         },
       },
@@ -136,6 +142,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           startDate: 1,
           auctionEndTime: 1,
           startingPrice: 1,
+          totalBids: 1, // Include the totalBids in the response
           latestBid: {
             amount: 1,
             createdAt: 1,
@@ -147,7 +154,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
 
 
     // Get the user's bookmarks
-    const user = await User.findById(userId).select('bookmarks');
+    const user = userId ? await User.findById(userId).select('bookmarks') : null;
     const userBookmarks = user ? user.bookmarks.map(String) : []; // Convert ObjectIds to strings
 
     // Manually add isBookmarked field
