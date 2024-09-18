@@ -60,6 +60,7 @@ export default function Navbar(props: Props) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate(0);
   };
 
