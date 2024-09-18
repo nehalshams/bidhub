@@ -152,7 +152,6 @@ export const getAllAuctions = async (req: Request, res: Response) => {
       },
     ]);
 
-
     // Get the user's bookmarks
     const user = userId ? await User.findById(userId).select('bookmarks') : null;
     const userBookmarks = user ? user.bookmarks.map(String) : []; // Convert ObjectIds to strings
@@ -163,9 +162,11 @@ export const getAllAuctions = async (req: Request, res: Response) => {
       isBookmarked: userBookmarks.includes(auction._id.toString()), // Check if auction is bookmarked
     }));
 
-    res.status(200).json(auctionList);
+    return res.status(200).json(auctionList);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    if (!res.headersSent) {
+      return res.status(500).json({ message: "Server error" });
+    }
   }
 };
 
@@ -281,13 +282,13 @@ export const getAuctionByUserId = async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {
     const auctions = await Auction.find({ createdBy: userId });
-    if (!auctions.length) {
-      res.status(404).json({ message: "You don't created any auction" })
-    }
+    // if (!auctions.length) {
+    //   return res.status(404).json({ message: "You don't created any auction" })
+    // }
 
-    res.status(200).json( auctions)
+   return res.status(200).json( auctions)
   }catch(err){
-    res.status(400).json({message: 'Server error'})
     console.log(err)
+    return res.status(400).json({message: 'Server error'})
   }
 }
