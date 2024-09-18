@@ -1,6 +1,6 @@
 const getUser = () => {
     const userStr = localStorage.getItem('user') || ""
-    const user = JSON.parse(userStr)
+    const user = userStr ? JSON.parse(userStr) : null
     return user;
 }
 

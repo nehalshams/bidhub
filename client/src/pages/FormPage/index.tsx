@@ -46,12 +46,12 @@ export default function FormPage() {
     event.preventDefault()
 
     const resp = await loginUser({ email: formField.email, password: formField.password });
-    if(resp?.data?.token){
+    if (resp?.data?.token) {
       localStorage.setItem('token', resp.data.token)
       localStorage.setItem('user', JSON.stringify(resp.data.user))
       navigate('/')
       window.location.reload()
-    }else {
+    } else {
       toast.error('Something went wrong')
     }
   };
@@ -83,12 +83,12 @@ export default function FormPage() {
   };
 
   /* From https://css.glass */
-// background: rgba(255, 255, 255, 0.2);
-// border-radius: 16px;
-// box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-// backdrop-filter: blur(5px);
-// -webkit-backdrop-filter: blur(5px);
-// border: 1px solid rgba(255, 255, 255, 0.3);
+  // background: rgba(255, 255, 255, 0.2);
+  // border-radius: 16px;
+  // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  // backdrop-filter: blur(5px);
+  // -webkit-backdrop-filter: blur(5px);
+  // border: 1px solid rgba(255, 255, 255, 0.3);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -100,8 +100,8 @@ export default function FormPage() {
         bottom: 0,
         background: "#d67976"
       }}>
-        <Box sx={{ xs: '100vw', md: '50vw'}} display={'flex'} justifyContent={'center'}>
-        <img style={{ width: '', objectFit: 'contain'}} alt="logo" src={Banner}/>
+        <Box sx={{ xs: '100vw', md: '50vw' }} display={'flex'} justifyContent={'center'}>
+          <img style={{ width: '', objectFit: 'contain' }} alt="logo" src={Banner} />
 
         </Box>
       </Box>
@@ -149,6 +149,7 @@ export default function FormPage() {
                     id="firstName"
                     label="First Name"
                     autoFocus
+                    size="small"
                   />
                 </Grid>
                 <Grid size={{ md: 6 }}>
@@ -160,6 +161,8 @@ export default function FormPage() {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
+                    size="small"
+
                   />
                 </Grid>
               </>
@@ -173,6 +176,8 @@ export default function FormPage() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                size="small"
+
               />
             </Grid>
             <Grid size={12}>
@@ -185,6 +190,8 @@ export default function FormPage() {
                 type={isPasswordType ? "password" : "text"}
                 id="password"
                 autoComplete="new-password"
+                size="small"
+
               />
             </Grid>
             <Grid>
@@ -200,7 +207,7 @@ export default function FormPage() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            // onClick={handleFormSubmit}
+          // onClick={handleFormSubmit}
           >
             {isSigninForm ? "Sign In" : "Sign up"}
           </Button>

@@ -86,6 +86,7 @@ export default function CreateAuction({ handleSignInModal }: Props) {
               sx={{
                 mb: "1rem",
               }}
+              size="small"
             />
             <TextField
               onChange={handleAuctionChange}
@@ -93,6 +94,7 @@ export default function CreateAuction({ handleSignInModal }: Props) {
               required
               fullWidth
               label="Base Price( $ )"
+              size="small"
             />
             <Box
               mt={".5rem"}

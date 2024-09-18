@@ -40,8 +40,8 @@ export const api = createApi({
       invalidatesTags: ["Auction"],
     }),
     getAuctions: builder.query({
-      query: ({ domainName, userId }) => {
-        return userId ? `/auctions/users/${userId}` :  `/auctions?name=${domainName || ""}`;
+      query: ({ domainName, userId, user }) => {
+        return userId ? `/auctions/users/${userId}` :  `/auctions?name=${domainName || ""}&userId=${user}`;
       },
       providesTags: ["Auction"],
     }),
@@ -61,6 +61,24 @@ export const api = createApi({
         return `/auctions/${auctionId}`;
       },
     }),
+    addBookmark: builder.mutation({
+      query: (params) => {
+        return {
+          url:`/users/bookmark`,
+          method: 'POST',
+          body: params
+        }
+      }
+    }),
+    removeBookmark: builder.mutation({
+      query : ({ auctionId, userId }) => {
+        return {
+          url: `users/bookmark/${auctionId}`,
+          method: 'DELETE',
+          body:{ userId}
+        }
+      }
+    })
   }),
 });
 
@@ -75,4 +93,6 @@ export const {
   usePlaceBidMutation,
   useGetAllBidQuery,
   useGetAuctionDetailQuery,
+  useAddBookmarkMutation,
+  useRemoveBookmarkMutation,
 } = api;

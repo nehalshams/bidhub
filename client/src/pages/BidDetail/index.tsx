@@ -35,7 +35,6 @@ const BidDetail = () => {
     navigate("/");
   };
 
-  console.log("🚀 ~ file: index.tsx:38 ~ BidDetail ~ auctionData:", auctionData)
   return (
     <Grid2
       container
@@ -50,15 +49,15 @@ const BidDetail = () => {
         <>
           <Grid2 size={{ xs: 12, md: 4 }}>
             <Typography>Auction Details</Typography>
-            <BidCard data={auctionData.data} />
+            <BidCard data={auctionData?.data} />
           </Grid2>
           <Grid2 size={{ xs: 12, md: 4 }}>
             <Typography>Domain Details</Typography>
-            <DomainCardComponent data={auctionData.data}/>
+            <DomainCardComponent data={auctionData?.data || {}}/>
           </Grid2>
 
           <Grid2 size={{ xs: 12, md: 8 }}>
-            <HistoryTable bidHistory={auctionData.data.bidHistory} />
+            <HistoryTable bidHistory={auctionData?.data.bidHistory || []} />
           </Grid2>
         </>
       )}
