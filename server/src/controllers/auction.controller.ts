@@ -80,6 +80,8 @@ export const getAllAuctions = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid query parameter" });
   }
   try {
+
+    // Model.aggregate( pipeline, options, callback );
     const auctions = await Auction.aggregate([
       {
         $match: {

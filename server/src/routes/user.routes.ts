@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, addBookmark, deleteBookmark } from '../controllers/user.controller';
+import { registerUser, loginUser, addBookmark, deleteBookmark, resetPassword, requestPasswordReset } from '../controllers/user.controller';
 import { validateUser } from '../middlewares/auth.middleware'
 
 const router = express.Router();
@@ -9,6 +9,12 @@ router.post('/signup', validateUser, registerUser);
 
 // Login user
 router.post('/login', loginUser);
+
+// request password reset
+router.post('/request-password-reset', requestPasswordReset)
+
+// reset password
+router.post('/reset-password', resetPassword)
 
 router.post('/bookmark', addBookmark)
 
