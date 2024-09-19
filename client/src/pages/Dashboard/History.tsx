@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { StyledTableCell, StyledTableRow } from "../../components/BaseTable";
 import {
   Box,
+  Button,
   CircularProgress,
   Collapse,
   Table,
@@ -17,8 +18,9 @@ import { HistoryType } from "../../types/bid.type";
 type Props = {
   open: boolean;
   auctionId: string;
+  handleWinner?: (auctionId: string) => void;
 };
-const History = ({ open, auctionId }: Props) => {
+const History = ({ open, auctionId, handleWinner }: Props) => {
   const { data: bidHistory, isLoading } = useGetAllBidQuery({
     auctionId,
   });
@@ -48,7 +50,12 @@ const History = ({ open, auctionId }: Props) => {
                       <StyledTableCell>Customer</StyledTableCell>
                       <StyledTableCell align="right">Amount</StyledTableCell>
                       <StyledTableCell align="right">
-                        Total price ($)
+                        {
+                          handleWinner &&
+                          <>
+                            Select Winner
+                          </>
+                        }
                       </StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -73,8 +80,12 @@ const History = ({ open, auctionId }: Props) => {
                             {amount}
                           </StyledTableCell>
                           <StyledTableCell align="right">
-                            {/* {historyRow.total} */}
-                            {/* {Math.round(historyRow.amount * row.price * 100) / 100} */}
+                            {
+                              handleWinner &&
+                              <Button onClick={() => handleWinner(auctionId)} variant="contained">
+                                Select as winner
+                              </Button>
+                            }
                           </StyledTableCell>
                         </StyledTableRow>
                       );

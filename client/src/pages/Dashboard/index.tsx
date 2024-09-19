@@ -66,7 +66,7 @@ const Dashboard = () => {
         <Navbar />
         <Box
           sx={{
-            marginTop: "4rem",
+            marginTop: "7rem",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -74,7 +74,7 @@ const Dashboard = () => {
           }}
         >
           <Box sx={{ height: '70vh' }} >
-            <Box display={"flex"} gap={".5rem"} mt={"3rem"} mb={"1rem"}>
+            <Box display={"flex"} gap={".5rem"} my={"1rem"}>
               <TextField
                 onChange={handleSearch}
                 required
