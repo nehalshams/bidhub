@@ -118,7 +118,7 @@ function Row(props: Props) {
           </Button>
         </StyledTableCell>
         <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
-        <StyledTableCell align="right">{row.bid}</StyledTableCell>
+        <StyledTableCell align="right">{row.totalBids}</StyledTableCell>
         <StyledTableCell align="right">{time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
@@ -168,7 +168,7 @@ type TableProps = {
 };
 export default function BaseTable({ handlePlaceBid, auctionData, handleUnauthorizeClick }: TableProps) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{ maxHeight: '70vh'}} component={Paper}>
       <Table size="small" aria-label="collapsible table">
         <TableHead>
           <TableRow>

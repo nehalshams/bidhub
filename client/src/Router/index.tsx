@@ -4,6 +4,7 @@ import ProtectedRoute from "./ProtectedRoute"
 import FormPage from "../pages/FormPage"
 import BidDetail from "../pages/BidDetail"
 import { CommingSoon } from "../pages/CommingSoon"
+import ForgotPassword from "../pages/FormPage/ForgotPassword"
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
             <Route path="about" element={<CommingSoon/>}/>
             <Route path="sign-in" element={<ProtectedRoute />}>
                 <Route index element={<FormPage />} />
+                <Route path='forgot-password' element={<ForgotPassword/>}/>
             </Route>
             <Route path="*" element={<div>Not Found</div>}/>
         </Route>
