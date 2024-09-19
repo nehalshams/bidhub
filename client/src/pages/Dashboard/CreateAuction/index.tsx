@@ -8,6 +8,7 @@ import DateComponent from "../../../components/DatePicker";
 import { useCreateAuctionMutation } from "../../../api";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../utils/AuthProvider";
+import { getUser } from "../../../utils/helper";
 
 type AuctionForm = {
   domainName?: string;
@@ -21,7 +22,8 @@ type Props = {
   handleSignInModal: () => void;
 }
 export default function CreateAuction({ handleSignInModal }: Props) {
-  const {isAuthenticated } = React.useContext(AuthContext)
+  const {isAuthenticated } = React.useContext(AuthContext);
+  const userId = getUser()?._id
 
   const [auctionModel, setAuctionModel] = React.useState(false);
   const [auctionForm, setAuctionForm] = React.useState<AuctionForm>();
@@ -44,7 +46,7 @@ export default function CreateAuction({ handleSignInModal }: Props) {
   };
 
   const handleCreateAuction = async () => {
-    const resp = await createAuction(auctionForm)
+    const resp = await createAuction({...auctionForm, userId })
     if(resp && resp?.data?.success){
       toast.success('Auction created successfully.');
       setAuctionModel(false)

@@ -78,7 +78,7 @@ export default function Navbar(props: Props) {
         const userObj = JSON.parse(user || "")
         const userId = userObj._id;
         handleCloseProfile()
-        return navigate(`/${userId}`)
+        return navigate(`/profile/${userId}`)
       }
     }[nav]
     pageNavigation?.()
