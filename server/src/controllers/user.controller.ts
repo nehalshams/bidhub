@@ -168,8 +168,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
-  const { token } = req.query; // Token from the reset link
-  const { password } = req.body; // New password
+  const { password, token } = req.body; // New password
 
   try {
     // Hash the token again to compare it with the one in the database

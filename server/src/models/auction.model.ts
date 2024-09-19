@@ -22,7 +22,7 @@ const AuctionSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid'}],
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User'}
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true}
 });
 
 // Adding virtual field for isBookmarked
