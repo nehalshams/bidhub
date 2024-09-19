@@ -10,16 +10,20 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formValidator } from "../../utils/validation";
 import { useLoginUserMutation, useSignupUserMutation } from "../../api";
 import { toast } from "react-toastify";
 import Banner from '../../img/bidhub-banner.png'
+import FormLayout from "./FormLayout";
 
 export default function FormPage() {
   const navigate = useNavigate();
+  const params = useParams()
+  console.log("🚀 ~ FormPage ~ params:", params)
   const [isSigninForm, setIsSigninForm] = React.useState(true);
   const [isPasswordType, setIsPasswordType] = React.useState(true);
+  const [forgotPassword, setForgotPassword] = React.useState(false)
 
   const [formField, setFormField] = React.useState({
     firstName: "",
@@ -58,6 +62,10 @@ export default function FormPage() {
     }
   };
 
+  const handleForgotPassword = () => {
+
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { firstName, lastName, email, password } = formField;
@@ -95,138 +103,114 @@ export default function FormPage() {
   // border: 1px solid rgba(255, 255, 255, 0.3);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "#d67976"
-      }}>
-        <Box sx={{ xs: '100vw', md: '50vw' }} display={'flex'} justifyContent={'center'}>
-          <img style={{ width: '', objectFit: 'contain' }} alt="logo" src={Banner} />
-
-        </Box>
-      </Box>
-      <CssBaseline />
+    <FormLayout>
+      <Typography component="h1" variant="h5">
+        {isSigninForm ? "Sign In" : forgotPassword ? "Forgot Password" : "Sign up"}
+      </Typography>
       <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          background: "#e0e0e090",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(5px)",
-          zIndex: 99999999,
-          position: "relative",
-          opacity: .9,
-          padding: '1rem',
-          borderRadius: '1rem'
-        }}
+        component="form"
+        noValidate
+        onSubmit={isSigninForm ? handleSignIn : forgotPassword ? handleForgotPassword : handleSubmit}
+        sx={{ mt: 3 }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          {isSigninForm ? "Sign In" : "Sign up"}
-        </Typography>
-        <Box
-          component="form"
-          noValidate
-          onSubmit={isSigninForm ? handleSignIn : handleSubmit}
-          sx={{ mt: 3 }}
-        >
-          <Grid container spacing={2}>
-            {isSigninForm ? (
-              <></>
-            ) : (
+        <Grid container spacing={2}>
+          {isSigninForm || forgotPassword ? (
+            <></>
+          ) : (
+            <>
+              <Grid size={{ md: 6 }}>
+                <TextField
+                  onChange={handleFormChange}
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                  size="small"
+                  value={firstName}
+                />
+              </Grid>
+              <Grid size={{ md: 6 }}>
+                <TextField
+                  onChange={handleFormChange}
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  size="small"
+                  value={lastName}
+                />
+              </Grid>
+            </>
+          )}
+          <Grid size={12}>
+            <TextField
+              onChange={handleFormChange}
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              size="small"
+              value={email}
+            />
+          </Grid>
+          {
+            forgotPassword ? <></>
+              :
               <>
-                <Grid size={{ md: 6 }}>
+                <Grid size={12}>
                   <TextField
                     onChange={handleFormChange}
-                    autoComplete="given-name"
-                    name="firstName"
                     required
                     fullWidth
-                    id="firstName"
-                    label="First Name"
-                    autoFocus
+                    name="password"
+                    label="Password"
+                    type={isPasswordType ? "password" : "text"}
+                    id="password"
+                    autoComplete="new-password"
                     size="small"
-                    value={firstName}
+                    value={password}
                   />
                 </Grid>
-                <Grid size={{ md: 6 }}>
-                  <TextField
-                    onChange={handleFormChange}
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="family-name"
-                    size="small"
-                    value={lastName}
+                <Grid display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
+                  <FormControlLabel
+                    onClick={handlePasswordVisibility}
+                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                    label="Show Password"
                   />
+                  <Button onClick={() => {
+                    setIsSigninForm(false)
+                    setForgotPassword(true)
+                  }}>Forgot Passord?</Button>
                 </Grid>
               </>
-            )}
-            <Grid size={12}>
-              <TextField
-                onChange={handleFormChange}
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                size="small"
-                value={email}
-              />
-            </Grid>
-            <Grid size={12}>
-              <TextField
-                onChange={handleFormChange}
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type={isPasswordType ? "password" : "text"}
-                id="password"
-                autoComplete="new-password"
-                size="small"
-                value={password}
-              />
-            </Grid>
-            <Grid>
-              <FormControlLabel
-                onClick={handlePasswordVisibility}
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="Show Password"
-              />
-            </Grid>
+          }
+        </Grid>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        // onClick={handleFormSubmit}
+        >
+          {forgotPassword ? 'Send reset link' : isSigninForm ? "Sign In" : "Sign up"}
+        </Button>
+        <Grid container justifyContent="flex-end">
+          <Grid>
+            <Button onClick={handleFormType}>
+              {isSigninForm
+                ? "Don't have an account? Sign Up"
+                : "Already have an account? Sign In"}
+            </Button>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            // onClick={handleFormSubmit}
-          >
-            {isSigninForm ? "Sign In" : "Sign up"}
-          </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid>
-              <Button onClick={handleFormType}>
-                {isSigninForm
-                  ? "Don't have an account? Sign Up"
-                  : "Already have an account? Sign In"}
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
+        </Grid>
       </Box>
-    </Container>
+    </FormLayout>
   );
 }
