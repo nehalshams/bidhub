@@ -71,7 +71,7 @@ export default function Navbar(props: Props) {
   const handleNavItem = (nav: string) => {
     const pageNavigation = {
       Contact: () => navigate('/contact'),
-      Home: () => navigate('/home'),
+      Home: () => navigate('/'),
       About: () => navigate('/about'),
       Profile: () =>{ 
         const user = localStorage.getItem('user')
@@ -183,7 +183,7 @@ export default function Navbar(props: Props) {
           right: { xs: ".5rem", md: "3rem" },
           width: "auto",
           borderRadius: "4rem",
-          maxWidth: "1260px",
+          maxWidth: "1660px",
           margin: "auto",
           backgroundColor: "primary.main",
         }}
