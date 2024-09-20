@@ -150,7 +150,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       to: email,  // Recipient's address
       subject: 'Reset password',  // Subject
       text: 'Hello from Bidhub!', // Plain text body
-      html: `<h1>Hello</h1><p>Click on this link to reset your password <br> <a href=${resetUrl} target="_blank"></a></p>`  // HTML body
+      html: `<h1>Hello</h1><p>Click on this link to reset your password <b> <a href=${resetUrl} target="_blank">Click here</a> </b> </p>`  // HTML body
     };
     
     // Send email
