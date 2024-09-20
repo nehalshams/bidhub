@@ -6,7 +6,6 @@ import { ToastContainer } from "react-toastify";
 import { Box, useTheme } from "@mui/material";
 function App() {
   const theme = useTheme();
-  
   return (
     <Box sx={{ height: '100vh', backgroundColor: theme.palette.primary['light']}}>
       <Router/>
