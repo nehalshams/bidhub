@@ -16,10 +16,13 @@ const customTheme = createTheme(
   {
     palette: {
       primary: {
-        main: "#B25A58",
-        light: "#fdf6f6"
+        main: "#0076cc",
+        light: "#0076cc20"
       },
     },
+    typography: {
+      fontFamily: "Montserrat"
+    }
   }
 )
 root.render(

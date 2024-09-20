@@ -6,6 +6,8 @@ import BidDetail from "../pages/BidDetail"
 import { CommingSoon } from "../pages/CommingSoon"
 import ForgotPassword from "../pages/FormPage/ForgotPassword"
 import ProfilePage from "../pages/ProfilePage.tsx"
+import AboutUs from "../pages/AboutUs"
+import ContactUs from "../pages/ContactUs"
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -15,8 +17,8 @@ const router = createBrowserRouter(
             <Route path="profile/:userId" element={<ProfilePage/>}/>
             <Route path="/bid/:id" element={<BidDetail />} />
             <Route path="home" element={<CommingSoon/>}/>
-            <Route path="contact" element={<CommingSoon/>}/>
-            <Route path="about" element={<CommingSoon/>}/>
+            <Route path="contact" element={<ContactUs/>}/>
+            <Route path="about" element={<AboutUs/>}/>
             <Route path="sign-in" element={<ProtectedRoute />}>
                 <Route index element={<FormPage />} />
                 <Route path='reset-password' element={<ForgotPassword/>}/>

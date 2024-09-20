@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { formValidator } from "../../utils/validation";
-import { useLoginUserMutation, useSignupUserMutation } from "../../api";
+import { useLoginUserMutation, useRequestPasswordResetMutation, useSignupUserMutation } from "../../api";
 import { toast } from "react-toastify";
 import Banner from '../../img/bidhub-banner.png'
 import FormLayout from "./FormLayout";
@@ -20,7 +20,6 @@ import FormLayout from "./FormLayout";
 export default function FormPage() {
   const navigate = useNavigate();
   const params = useParams()
-  console.log("🚀 ~ FormPage ~ params:", params)
   const [isSigninForm, setIsSigninForm] = React.useState(true);
   const [isPasswordType, setIsPasswordType] = React.useState(true);
   const [forgotPassword, setForgotPassword] = React.useState(false)
@@ -35,9 +34,11 @@ export default function FormPage() {
 
   const [signupUser] = useSignupUserMutation();
   const [loginUser] = useLoginUserMutation();
+  const [requestPasswordReset] = useRequestPasswordResetMutation()
 
   const handleFormType = () => {
     setIsSigninForm(!isSigninForm);
+    setForgotPassword(false)
   };
 
   const handlePasswordVisibility = () => {
@@ -62,8 +63,24 @@ export default function FormPage() {
     }
   };
 
-  const handleForgotPassword = () => {
-
+  const handleForgotPassword = async(event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if(email){
+      const resp = await requestPasswordReset({email})
+      const err = resp.error as any
+      if(err){
+        toast.error(err.data.message || "Something went wrong")
+      }else{
+        toast.success(resp.data.message)
+        setForgotPassword(false)
+        setFormField({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+        })
+      }
+    }
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -76,7 +93,6 @@ export default function FormPage() {
     } else if (!isSigninForm && firstName && lastName && email && password) {
       const isValid = formValidator(formField);
       if (isValid) {
-        console.log("🚀 ~ handleSubmit ~ isValid:", isValid)
         const resp = await signupUser(formField);
         setIsSigninForm(true);
         toast.success('Account created successfully.')
@@ -121,7 +137,6 @@ export default function FormPage() {
               <Grid size={{ md: 6 }}>
                 <TextField
                   onChange={handleFormChange}
-                  autoComplete="given-name"
                   name="firstName"
                   required
                   fullWidth
@@ -140,7 +155,6 @@ export default function FormPage() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  autoComplete="family-name"
                   size="small"
                   value={lastName}
                 />
@@ -173,7 +187,6 @@ export default function FormPage() {
                     label="Password"
                     type={isPasswordType ? "password" : "text"}
                     id="password"
-                    autoComplete="new-password"
                     size="small"
                     value={password}
                   />

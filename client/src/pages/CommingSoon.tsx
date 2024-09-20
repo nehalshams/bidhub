@@ -48,7 +48,7 @@ export const CommingSoon = () => {
         <Typography variant="h2">
             Comming
         </Typography>
-            <Typography variant="h2" color="#B25A58">Soon</Typography>
+            <Typography variant="h2" color="primary.main">Soon</Typography>
 
         </Box>
       <AnimatedBox>
@@ -59,7 +59,7 @@ export const CommingSoon = () => {
           }}
         >
           <Box width={"10rem"}>
-            <img src={banner} alt="logo" />
+            <img style={{ width: '8rem', borderRadius: '1.5rem'}} src={banner} alt="logo" />
           </Box>
         </Box>
       </AnimatedBox>

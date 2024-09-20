@@ -73,7 +73,7 @@ const Dashboard = () => {
             flexDirection: "column",
           }}
         >
-          <Box sx={{ height: '70vh' }} >
+          <Box sx={{ height: '70vh' }} width={{ xs: '100%', md: "75vw"}} maxWidth={'1280px'} >
             <Box display={"flex"} gap={".5rem"} my={"1rem"}>
               <TextField
                 onChange={handleSearch}
