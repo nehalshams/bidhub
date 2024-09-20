@@ -17,19 +17,19 @@ const allowedOrigins = ['https://bidhub-five.vercel.app', 'http://localhost:3000
 
 // Define CORS options with proper types
 const corsOptions: CorsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin, like mobile apps or curl
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true); // Accept the request
-    } else {
-      callback(new Error('Not allowed by CORS')); // Reject the request
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true, // Allow credentials (cookies, authorization headers)
-};
+    origin: function (origin, callback) {
+      console.log('Request Origin:', origin);  // Debug log to see the origin
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        console.log('CORS Allowed');
+        callback(null, true);
+      } else {
+        console.log('CORS Rejected');
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  };  
 
 app.use(cors(corsOptions));
 
