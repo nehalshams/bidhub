@@ -17,7 +17,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       return res.status(400).json({ message: 'User already exists' });
     }
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, process.env.PASSWORD_HASH || 10);
 
     // Create new user
     const newUser = await User.create({ email, password: hashedPassword, firstName, lastName, role });
@@ -115,6 +115,7 @@ export const deleteBookmark = async (req: Request, res: Response) => {
 
 export const requestPasswordReset = async (req: Request, res: Response) => {
   const { email } = req.body;
+  const frontendHost = req.headers.origin; // Will give you the frontend URL
 
   try {
     const user = await User.findOne({ email });
@@ -133,7 +134,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     await user.save();
 
     // Create the reset link with token
-    const resetUrl = `${req.protocol}://${req.get('host')}/sign-in/reset-password?token=${resetToken}`;
+    const resetUrl = `${req.protocol}://${frontendHost}/sign-in/reset-password?token=${resetToken}`;
 
     // Send an email (this is a simple example using nodemailer)
     const transporter = nodemailer.createTransport({
@@ -179,15 +180,18 @@ export const resetPassword = async (req: Request, res: Response) => {
       resetPasswordToken: hashedToken,
       resetPasswordExpire: { $gt: Date.now() }, // Ensure token is not expired
     });
+    console.log("🚀 ~ resetPassword ~ user:", user)
 
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
+    const hashedPassword = await bcrypt.hash(password, process.env.PASSWORD_HASH || 10);
+
     // Update the user's password and remove the reset token fields
-    user.password = password; // Make sure to hash the password before saving
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.password = hashedPassword; // Make sure to hash the password before saving
+    // user.resetPasswordToken = undefined;
+    // user.resetPasswordExpire = undefined;
 
     await user.save();
 
