@@ -100,14 +100,6 @@ export default function Navbar(props: Props) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
@@ -193,7 +185,7 @@ export default function Navbar(props: Props) {
           borderRadius: "4rem",
           maxWidth: "1260px",
           margin: "auto",
-          backgroundColor: "#d67976",
+          backgroundColor: "primary.main",
         }}
         component="nav"
       >
@@ -212,9 +204,9 @@ export default function Navbar(props: Props) {
             aria-label="show 4 new mails"
             color="inherit"
           >
-            <Badge sx={{ mt: '-6px'}} color="error">
+            {/* <Badge sx={{ mt: '-6px'}} color="error">
               <img src={Logo} alt="logo" />
-            </Badge>
+            </Badge> */}
             <Typography variant="h6" component="div">
               BidHub
             </Typography>
@@ -237,15 +229,6 @@ export default function Navbar(props: Props) {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {isAuthenticated ? (
               <>
-                <IconButton
-                  size="large"
-                  aria-label="show 4 new mails"
-                  color="inherit"
-                >
-                  <Badge badgeContent={4} color="error">
-                    <MailIcon />
-                  </Badge>
-                </IconButton>
                 <IconButton
                   size="large"
                   aria-label="show 17 new notifications"

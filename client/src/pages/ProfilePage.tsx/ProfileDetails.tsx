@@ -5,8 +5,7 @@ import { getUser } from '../../utils/helper';
 const ariaLabel = { 'aria-label': 'description' };
 const ProfileDetails = () => {
     const user = getUser();
-    console.log("🚀 ~ ProfileDetails ~ user:", user)
-    const { firstName, lastName, email } = user
+    const { firstName, lastName, email } = user || {}
     return (
         <Box>
             <Box sx={{ margin: "1rem auto" }} display={'flex'} justifyContent={'center'}>

@@ -22,33 +22,19 @@ type Props = {
 
 const FormLayout = ({ children } : Props) => {
   return (
-    <Container component="main" maxWidth="xs">
-      <Box sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "#d67976"
-      }}>
-        <Box sx={{ xs: '100vw', md: '50vw' }} display={'flex'} justifyContent={'center'}>
-          <img style={{ width: '', objectFit: 'contain' }} alt="logo" src={Banner} />
-        </Box>
-      </Box>
+    <Container sx={{ padding: '4rem'}} component="main" maxWidth="sm">
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          background: "#e0e0e090",
+          padding: '4rem',
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
           backdropFilter: "blur(5px)",
           zIndex: 99999999,
           position: "relative",
           opacity: .9,
-          padding: '1rem',
           borderRadius: '1rem'
         }}
       >
