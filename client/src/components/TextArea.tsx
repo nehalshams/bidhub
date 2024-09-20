@@ -6,7 +6,7 @@ type Props = {
     placeholder: string
 }
 export default function TextArea({ placeholder}: Props) {
-  return <TextareaAuto aria-label="empty textarea" placeholder={placeholder} />;
+  return <TextareaAuto aria-label="empty textarea" placeholder={placeholder} minRows={10} />;
 
 }
 
