@@ -17,7 +17,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       return res.status(400).json({ message: 'User already exists' });
     }
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, process.env.PASSWORD_HASH || 10);
+    const hashedPassword = await bcrypt.hash(password, 8);
 
     // Create new user
     const newUser = await User.create({ email, password: hashedPassword, firstName, lastName, role });
@@ -180,13 +180,12 @@ export const resetPassword = async (req: Request, res: Response) => {
       resetPasswordToken: hashedToken,
       resetPasswordExpire: { $gt: Date.now() }, // Ensure token is not expired
     });
-    console.log("🚀 ~ resetPassword ~ user:", user)
 
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, process.env.PASSWORD_HASH || 10);
+    const hashedPassword = await bcrypt.hash(password, 8);
 
     // Update the user's password and remove the reset token fields
     user.password = hashedPassword; // Make sure to hash the password before saving
