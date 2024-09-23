@@ -24,6 +24,10 @@ const FormLayout = ({ children } : Props) => {
   return (
     <Container sx={{ padding: '4rem'}} component="main" maxWidth="sm">
       <CssBaseline />
+      <Box sx={{ position: 'fixed'}}>
+        <Typography variant="h1" letterSpacing={'2rem'} color="primary.main">BidHub</Typography>
+      </Box>
+
       <Box
         sx={{
           display: "flex",

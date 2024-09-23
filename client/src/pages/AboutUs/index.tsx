@@ -6,11 +6,13 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
+import Navbar from '../Layout/Navbar';
 
 export default function AboutUs() {
     return (
         <Box display={'flex'} justifyContent={'center'} pt={'2rem'}>
-            <Card sx={{ maxWidth: { xs: '100%', md: "75vw" }, display: { xs: 'block', xl: 'flex'}, alignItems: 'center' }}>
+            <Navbar/>
+            <Box sx={{ maxWidth: { xs: '100%', md: "75vw" }, border: 0, display: { xs: 'block', xl: 'flex'}, alignItems: 'center' }}>
                 <CardContent>
                     <Typography whiteSpace={'nowrap'} gutterBottom variant="h1" component="div">
                         About Us
@@ -50,7 +52,7 @@ export default function AboutUs() {
                         </Box>
                     </Box>
                 </Box>
-            </Card>
+            </Box>
         </Box>
     );
 }

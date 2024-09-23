@@ -20,7 +20,7 @@ const getRemainingTime = (startDate: string, endDate: string) => {
     if(days<0 || hours < 0 || minutes < 0){
         return 'Expired'
     }
-    return `${days}d ${hours}h ${minutes}min`
+    return `${days ? days+ " d" : ""} ${hours ? hours + " h" : ""} ${minutes}min`
 }
 export {
     getUser,

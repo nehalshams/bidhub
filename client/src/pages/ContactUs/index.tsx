@@ -1,11 +1,13 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from '@mui/material'
+import { Box, Button, CardContent, TextField, Typography } from '@mui/material'
 import React from 'react'
 import TextArea from '../../components/TextArea'
+import Navbar from '../Layout/Navbar'
 
 const ContactUs = () => {
     return (
         <Box display={'flex'} justifyContent={'center'} pt={'2rem'}>
-            <Card sx={{ maxWidth: { xs: '100%', md: "75vw" }, display: 'flex', alignItems: 'center' }}>
+            <Navbar/>
+            <Box sx={{ maxWidth: { xs: '100%', md: "75vw" }, display: 'flex', alignItems: 'center' }}>
                 <CardContent>
                     <Typography gutterBottom variant="h1" component="div">
                         Contact Us
@@ -42,7 +44,7 @@ const ContactUs = () => {
                         Send
                     </Button>
                 </Box>
-            </Card>
+            </Box>
         </Box>
     )
 }

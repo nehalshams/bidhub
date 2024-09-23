@@ -58,7 +58,7 @@ type Props = {
   row: Bid;
   handleBidClick?: (bid: Bid) => void;
   handleUnauthorizeClick?: () => void;
-  handleWinner?: (auctionId: string) => void;
+  handleWinner?: (auctionId: string, bidderId: string) => void;
 };
 
 function Row(props: Props) {
@@ -121,7 +121,7 @@ function Row(props: Props) {
         </StyledTableCell>
         <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
         <StyledTableCell align="right">{row.totalBids}</StyledTableCell>
-        <StyledTableCell align="right">{time}</StyledTableCell>
+        <StyledTableCell align="right">{row.status === 'closed' ? 'Closed' : time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
 
@@ -133,7 +133,7 @@ function Row(props: Props) {
         <StyledTableCell align="right">
           {
             handleBidClick &&
-            <Button disabled={time === 'Expired'} onClick={() => handleBidClick?.(row)} variant="contained">
+            <Button disabled={time === 'Expired' || row.status === 'closed'} onClick={() => handleBidClick?.(row)} variant="contained">
               Bid Now
             </Button>
           }
@@ -170,7 +170,7 @@ type TableProps = {
   handlePlaceBid?: (id: Bid) => void;
   auctionData: Bid[];
   handleUnauthorizeClick?: () => void;
-  handleWinner?: (auctionId: string) => void;
+  handleWinner?: (auctionId: string, bidderId: string) => void;
 };
 export default function BaseTable({ handlePlaceBid, auctionData, handleUnauthorizeClick, handleWinner }: TableProps) {
   return (
