@@ -6,6 +6,7 @@ export interface IBid extends Document {
   auctionId: mongoose.Schema.Types.ObjectId;
   amount: number;
   createdAt: Date;
+  _id: string;
 }
 
 const BidSchema: Schema = new Schema({

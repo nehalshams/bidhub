@@ -176,89 +176,28 @@ export const getAllAuctions = async (req: Request, res: Response) => {
   const { userId } = req.body; // Assuming userId is passed in the request body to check for bookmarks
 
   try {
-    // Step 1: Get all auctions with their latest bid and total number of bids
-    const auctions = await Auction.aggregate([
-      {
-        $lookup: {
-          from: 'bids', // Join with the 'bids' collection
-          localField: '_id', // Match auction ID with auctionId in bids
-          foreignField: 'auctionId',
-          as: 'bids'
-        }
-      },
-      {
-        $unwind: {
-          path: '$bids',
-          preserveNullAndEmptyArrays: true // Allow auctions without bids
-        }
-      },
-      {
-        $sort: {
-          'bids.createdAt': -1 // Sort bids by createdAt in descending order
-        }
-      },
-      {
-        $group: {
-          _id: '$_id',
-          domainName: { $first: '$domainName' },
-          description: { $first: '$description' },
-          startingPrice: { $first: '$startingPrice' },
-          currentPrice: { $first: '$currentPrice' },
-          status: { $first: '$status' },
-          auctionEndTime: { $first: '$auctionEndTime' },
-          createdAt: { $first: '$createdAt' },
-          updatedAt: { $first: '$updatedAt' },
-          createdBy: { $first: '$createdBy' },
-          latestBid: { $first: '$bids' }, // Get the latest bid
-          totalBids: { $sum: 1 } // Count the total number of bids
-        }
-      },
-      // {
-      //   $lookup: {
-      //     from: 'users', // Join with 'users' collection
-      //     localField: 'latestBid.userId', // Match userId in latest bid
-      //     foreignField: '_id',
-      //     as: 'latestBid.user'
-      //   }
-      // },
-      // {
-      //   $unwind: {
-      //     path: '$latestBid.user',
-      //     preserveNullAndEmptyArrays: true // Allow auctions without bids
-      //   }
-      // },
-      {
-        $project: {
-          _id: 1,
-          domainName: 1,
-          description: 1,
-          startingPrice: 1,
-          currentPrice: 1,
-          status: 1,
-          auctionEndTime: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          createdBy: 1,
-          totalBids: 1, // Include total number of bids in the result
-          latestBid: {
-            amount: 1,
-            createdAt: 1,
-            'user._id': 1,
-            'user.email': 1,
-            'user.name': 1
-          }
-        }
-      }
-    ]);
+    // Step 1: Get all auctions with bid history
+    const auctions = await Auction.find()
+      .populate({
+        path: 'bidHistory',
+        options: { sort: { createdAt: -1 }}, // Get the latest bid
+        populate: {
+          path: 'userId', // Populate user data for the latest bid
+          select: 'name email', // Fetch only name and email of the user
+        },
+      })
+      .lean();
 
     // Step 2: Check if auctions are bookmarked by the current user
     const user = await User.findById(userId).select('bookmarks');
     const userBookmarks = user ? user.bookmarks.map(String) : [];
 
-    // Step 3: Add isBookmarked key to each auction
-    const auctionList = auctions.map(auction => ({
+    // Step 3: Add isBookmarked, total number of bids, and latest bid information to each auction
+    const auctionList = auctions.map((auction) => ({
       ...auction,
-      isBookmarked: userBookmarks.includes(auction._id.toString())
+      isBookmarked: userBookmarks.includes(auction._id.toString()),
+      totalBids: auction?.bidHistory?.length, // Count total bids from bidHistory
+      latestBid: auction?.bidHistory?.[0] || null, // Get the latest bid
     }));
 
     // Step 4: Send response
@@ -270,39 +209,81 @@ export const getAllAuctions = async (req: Request, res: Response) => {
 };
 
 // Place a bid on a domain auction listing
+// export const placeBid = async (req: Request, res: Response) => {
+//   const { auctionId } = req.params;
+//   const { userId, amount } = req.body;
+
+//   try {
+//     // Find the domain
+//     const auction = await Auction.findById(auctionId);
+//     if (!auction) {
+//       return res.status(404).json({ message: "Domain not found" });
+//     }
+
+//     // Check if the bid amount is higher than the current price
+//     if (amount <= (auction.currentPrice || auction.startingPrice)) {
+//       return res.status(400).json({
+//         message: "Bid amount must be higher than the current price",
+//         success: false,
+//       });
+//     }
+
+//     // Create a new bid
+//     const newBid = await Bid.create({ auctionId, userId, amount });
+//     // Update the domain's current price
+//     auction.currentPrice = amount;
+//     await auction.save();
+//     // Update the auction's bidHistory to include the new bid
+//     await Auction.findByIdAndUpdate(auctionId, {
+//       $push: { bidHistory: newBid._id },
+//       $set: { currentPrice: amount }, // Optionally, update current price with latest bid
+//     });
+
+//     res.status(201).json(newBid);
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
 export const placeBid = async (req: Request, res: Response) => {
-  const { auctionId } = req.params;
-  const { userId, amount } = req.body;
+  const { auctionId, userId, amount } = req.body;
 
   try {
-    // Find the domain
+    // Step 1: Check if the auction is active
     const auction = await Auction.findById(auctionId);
+
     if (!auction) {
-      return res.status(404).json({ message: "Domain not found" });
+      return res.status(404).json({ message: 'Auction not found' });
     }
 
-    // Check if the bid amount is higher than the current price
-    if (amount <= (auction.currentPrice || auction.startingPrice)) {
-      return res.status(400).json({
-        message: "Bid amount must be higher than the current price",
-        success: false,
-      });
+    if (auction.status !== 'active') {
+      return res.status(400).json({ message: 'Auction is closed or inactive' });
     }
 
-    // Create a new bid
-    const newBid = await Bid.create({ auctionId, userId, amount });
-    // Update the domain's current price
-    auction.currentPrice = amount;
-    await auction.save();
-    // Update the auction's bidHistory to include the new bid
-    await Auction.findByIdAndUpdate(auctionId, {
-      $push: { bidHistory: newBid._id },
-      $set: { currentPrice: amount }, // Optionally, update current price with latest bid
+    // Step 2: Create the new bid
+    const newBid = await Bid.create({
+      auctionId,
+      userId,
+      amount,
     });
+    console.log("🚀 ~ placeBid ~ newBid:", newBid)
 
-    res.status(201).json(newBid);
+    // Step 3: Update the Auction document with the latest bid details
+    auction.currentPrice = amount; // Update the current price to the latest bid amount
+    auction?.bidHistory?.push(newBid._id); // Add the bid to the bid history
+
+    console.log("🚀 ~ placeBid ~ auction:", auction)
+    await auction.save();
+
+    res.status(201).json({
+      message: 'Bid placed successfully',
+      bid: newBid,
+      auction,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -403,9 +384,8 @@ export const selectAuctionWinner = async (req: Request, res: Response) => {
     if (!auction) {
       return res.status(404).json({ message: 'Auction not found' });
     }
-
     // Step 2: Ensure that the current user is the creator of the auction
-    if (auction.createdBy.toString() !== userId) {
+    if (auction?.createdBy?.toString() !== userId) {
       return res.status(403).json({ message: 'You are not authorized to select a winner for this auction' });
     }
 

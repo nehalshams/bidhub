@@ -10,8 +10,9 @@ export interface IAuction extends Document {
   auctionEndTime: Date;
   createdAt: Date;
   updatedAt: Date;
-  createdBy: string;
-  winner?: ObjectId; 
+  createdBy?: string;
+  winner?: ObjectId;
+  bidHistory?: string[];
 }
 
 const AuctionSchema: Schema = new Schema({
@@ -23,8 +24,8 @@ const AuctionSchema: Schema = new Schema({
   auctionEndTime: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid'}],
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+  bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid', default: []}],
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
   winner: { type: Schema.Types.ObjectId, ref: 'User' } // Store the winner of the auction
 });
 
