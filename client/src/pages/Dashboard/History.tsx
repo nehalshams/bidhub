@@ -18,7 +18,7 @@ import { HistoryType } from "../../types/bid.type";
 type Props = {
   open: boolean;
   auctionId: string;
-  handleWinner?: (auctionId: string) => void;
+  handleWinner?: (auctionId: string, bidderId: string) => void;
 };
 const History = ({ open, auctionId, handleWinner }: Props) => {
   const { data: bidHistory, isLoading } = useGetAllBidQuery({
@@ -64,7 +64,7 @@ const History = ({ open, auctionId, handleWinner }: Props) => {
                       const {
                         createdAt,
                         amount,
-                        user: { firstName, lastName },
+                        user: { firstName, lastName, _id: bidderId },
                       } = historyRow;
                       const formattedDate = dayjs(createdAt).format("MM/DD/YYYY");
                       return (
@@ -82,7 +82,7 @@ const History = ({ open, auctionId, handleWinner }: Props) => {
                           <StyledTableCell align="right">
                             {
                               handleWinner &&
-                              <Button onClick={() => handleWinner(auctionId)} variant="contained">
+                              <Button onClick={() => handleWinner(auctionId, bidderId)} variant="contained">
                                 Select as winner
                               </Button>
                             }

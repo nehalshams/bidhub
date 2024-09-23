@@ -96,6 +96,15 @@ export const api = createApi({
           body: params
         }
       }
+    }),
+    selectWinner: builder.mutation({
+      query: (params) => {
+        return {
+          url: `auctions/select-winner`,
+          method: 'POST',
+          body: params,
+        }
+      }
     })
   }),
 });
@@ -115,4 +124,5 @@ export const {
   useRemoveBookmarkMutation,
   useResetPasswordMutation,
   useRequestPasswordResetMutation,
+  useSelectWinnerMutation,
 } = api;

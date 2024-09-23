@@ -23,7 +23,8 @@ export type Bid = {
   };
 export type User = {
   firstName: string,
-  lastName: string
+  lastName: string,
+  _id: string,
 }
 export type HistoryType = {
   _id: string;
