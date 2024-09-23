@@ -173,14 +173,19 @@ export const getDomain = async (req: Request, res: Response) => {
 // };
 
 export const getAllAuctions = async (req: Request, res: Response) => {
-  const { userId } = req.body; // Assuming userId is passed in the request body to check for bookmarks
+  const { userId, name } = req.query as { userId: string, name: string}; // Assuming userId is passed in the request body to check for bookmarks
 
   try {
+    // Create a search filter based on the domainName if provided
+    const searchFilter = name
+    ? { domainName: new RegExp(name, "i") } // Case-insensitive search by domainName
+    : {};
+
     // Step 1: Get all auctions with bid history
-    const auctions = await Auction.find()
+    const auctions = await Auction.find(searchFilter)
       .populate({
         path: 'bidHistory',
-        options: { sort: { createdAt: -1 }}, // Get the latest bid
+        options: { sort: { createdAt: -1 } }, // Get the latest bid
         populate: {
           path: 'userId', // Populate user data for the latest bid
           select: 'name email', // Fetch only name and email of the user
@@ -366,10 +371,10 @@ export const getAuctionByUserId = async (req: Request, res: Response) => {
     //   return res.status(404).json({ message: "You don't created any auction" })
     // }
 
-   return res.status(200).json( auctions)
-  }catch(err){
+    return res.status(200).json(auctions)
+  } catch (err) {
     console.log(err)
-    return res.status(400).json({message: 'Server error'})
+    return res.status(400).json({ message: 'Server error' })
   }
 }
 
