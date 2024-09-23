@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, SchemaType } from 'mongoose';
+import mongoose, { Document, ObjectId, Schema, SchemaType } from 'mongoose';
 
 export interface IAuction extends Document {
   _id: string,
@@ -10,6 +10,8 @@ export interface IAuction extends Document {
   auctionEndTime: Date;
   createdAt: Date;
   updatedAt: Date;
+  createdBy: string;
+  winner?: ObjectId; 
 }
 
 const AuctionSchema: Schema = new Schema({
@@ -22,7 +24,8 @@ const AuctionSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid'}],
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true}
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+  winner: { type: Schema.Types.ObjectId, ref: 'User' } // Store the winner of the auction
 });
 
 // Adding virtual field for isBookmarked

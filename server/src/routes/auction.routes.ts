@@ -9,6 +9,7 @@ import {
   getAllAuctions,
   getAuctionDetails,
   getAuctionByUserId,
+  selectAuctionWinner,
 //   getDomainBids
 } from '../controllers/auction.controller';
 
@@ -42,5 +43,8 @@ router.get('/:auctionId/bid', getAllBid)
 
 // Get all bids for a specific domain
 // router.get('/:domainId/bids', getDomainBids);
+
+// select winner
+router.post('/select-winner', selectAuctionWinner)
 
 export default router;

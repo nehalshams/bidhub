@@ -17,7 +17,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       return res.status(400).json({ message: 'User already exists' });
     }
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 8);
 
     // Create new user
     const newUser = await User.create({ email, password: hashedPassword, firstName, lastName, role });
@@ -115,6 +115,7 @@ export const deleteBookmark = async (req: Request, res: Response) => {
 
 export const requestPasswordReset = async (req: Request, res: Response) => {
   const { email } = req.body;
+  const frontendHost = req.headers.origin; // Will give you the frontend URL
 
   try {
     const user = await User.findOne({ email });
@@ -133,7 +134,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     await user.save();
 
     // Create the reset link with token
-    const resetUrl = `${req.protocol}://${req.get('host')}/sign-in/reset-password?token=${resetToken}`;
+    const resetUrl = `${req.protocol}://${frontendHost}/sign-in/reset-password?token=${resetToken}`;
 
     // Send an email (this is a simple example using nodemailer)
     const transporter = nodemailer.createTransport({
@@ -150,7 +151,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       to: email,  // Recipient's address
       subject: 'Reset password',  // Subject
       text: 'Hello from Bidhub!', // Plain text body
-      html: `<h1>Hello</h1><p>Click on this link to reset your password <br> <a href=${resetUrl} target="_blank"></a></p>`  // HTML body
+      html: `<h1>Hello</h1><p>Click on this link to reset your password <b> <a href=${resetUrl} target="_blank">Click here</a> </b> </p>`  // HTML body
     };
     
     // Send email
@@ -184,10 +185,12 @@ export const resetPassword = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 8);
+
     // Update the user's password and remove the reset token fields
-    user.password = password; // Make sure to hash the password before saving
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.password = hashedPassword; // Make sure to hash the password before saving
+    // user.resetPasswordToken = undefined;
+    // user.resetPasswordExpire = undefined;
 
     await user.save();
 

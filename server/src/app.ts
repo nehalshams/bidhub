@@ -13,17 +13,14 @@ dotenv.config();
 const app: Application = express();
 
 // Define allowed origins
-const allowedOrigins = ['https://bidhub-five.vercel.app', 'http://localhost:3000'];
+const allowedOrigins = ['https://bidhub-five.vercel.app', 'http://localhost:3000',  'http://localhost:3001'];
 
 // Define CORS options with proper types
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
-      console.log('Request Origin:', origin);  // Debug log to see the origin
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        console.log('CORS Allowed');
         callback(null, true);
       } else {
-        console.log('CORS Rejected');
         callback(new Error('Not allowed by CORS'));
       }
     },
