@@ -20,7 +20,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../utils/AuthProvider";
 import Logo from "../../icons/logo.svg";
 
@@ -45,6 +45,7 @@ export default function Navbar(props: Props) {
     React.useState<null | HTMLElement>(null);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const {pathname } = useLocation()
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -82,6 +83,15 @@ export default function Navbar(props: Props) {
       }
     }[nav]
     pageNavigation?.()
+  }
+
+  const getPath = (item: string) => {
+    const path = {
+      'Home': '/',
+      'About': '/about',
+      'Contact': '/contact'
+    }[item];
+    return path
   }
 
   const renderMobileMenu = (
@@ -219,7 +229,7 @@ export default function Navbar(props: Props) {
             }}
           >
             {navItems.map((item) => (
-              <Button onClick={() => handleNavItem(item)} key={item} sx={{ color: "#fff" }}>
+              <Button onClick={() => handleNavItem(item)} key={item} sx={{ color: "#fff", borderBottom: getPath(item) === pathname ? '1px solid #fff' : undefined, borderRadius: 0}}>
                 {item}
               </Button>
             ))}
