@@ -197,36 +197,36 @@ export const getAllAuctions = async (req: Request, res: Response) => {
           'bids.createdAt': -1 // Sort bids by createdAt in descending order
         }
       },
-      {
-        $group: {
-          _id: '$_id',
-          domainName: { $first: '$domainName' },
-          description: { $first: '$description' },
-          startingPrice: { $first: '$startingPrice' },
-          currentPrice: { $first: '$currentPrice' },
-          status: { $first: '$status' },
-          auctionEndTime: { $first: '$auctionEndTime' },
-          createdAt: { $first: '$createdAt' },
-          updatedAt: { $first: '$updatedAt' },
-          createdBy: { $first: '$createdBy' },
-          latestBid: { $first: '$bids' }, // Get the latest bid
-          totalBids: { $sum: 1 } // Count the total number of bids
-        }
-      },
-      {
-        $lookup: {
-          from: 'users', // Join with 'users' collection
-          localField: 'latestBid.userId', // Match userId in latest bid
-          foreignField: '_id',
-          as: 'latestBid.user'
-        }
-      },
-      {
-        $unwind: {
-          path: '$latestBid.user',
-          preserveNullAndEmptyArrays: true // Allow auctions without bids
-        }
-      },
+      // {
+      //   $group: {
+      //     _id: '$_id',
+      //     domainName: { $first: '$domainName' },
+      //     description: { $first: '$description' },
+      //     startingPrice: { $first: '$startingPrice' },
+      //     currentPrice: { $first: '$currentPrice' },
+      //     status: { $first: '$status' },
+      //     auctionEndTime: { $first: '$auctionEndTime' },
+      //     createdAt: { $first: '$createdAt' },
+      //     updatedAt: { $first: '$updatedAt' },
+      //     createdBy: { $first: '$createdBy' },
+      //     latestBid: { $first: '$bids' }, // Get the latest bid
+      //     totalBids: { $sum: 1 } // Count the total number of bids
+      //   }
+      // },
+      // {
+      //   $lookup: {
+      //     from: 'users', // Join with 'users' collection
+      //     localField: 'latestBid.userId', // Match userId in latest bid
+      //     foreignField: '_id',
+      //     as: 'latestBid.user'
+      //   }
+      // },
+      // {
+      //   $unwind: {
+      //     path: '$latestBid.user',
+      //     preserveNullAndEmptyArrays: true // Allow auctions without bids
+      //   }
+      // },
       {
         $project: {
           _id: 1,
