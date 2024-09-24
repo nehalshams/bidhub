@@ -45,6 +45,15 @@ export const api = createApi({
       },
       providesTags: ["Auction"],
     }),
+    deleteAuction: builder.mutation({
+      query: ({ auctionId }) => {
+        return { 
+          url: `/auctions/${auctionId}`,
+          method: 'DELETE'
+        };
+      },
+      invalidatesTags: ["Auction"],
+    }),
     placeBid: builder.mutation({
       query: (bidData) => ({
         url: `/auctions/${bidData.auctionId}/bid`,
@@ -105,7 +114,10 @@ export const api = createApi({
           body: params,
         }
       }
-    })
+    }),
+    getUserBids: builder.query({
+      query: ({userId}) => `/auctions/user-bids?user-id=${userId}`, // endpoint for fetching posts
+    }),
   }),
 });
 
@@ -125,4 +137,6 @@ export const {
   useResetPasswordMutation,
   useRequestPasswordResetMutation,
   useSelectWinnerMutation,
+  useGetUserBidsQuery,
+  useDeleteAuctionMutation,
 } = api;

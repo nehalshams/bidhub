@@ -59,11 +59,12 @@ type Props = {
   handleBidClick?: (bid: Bid) => void;
   handleUnauthorizeClick?: () => void;
   handleWinner?: (auctionId: string, bidderId: string) => void;
+  handleDeleteAuction?: (auctionId: string) => void;
 };
 
 function Row(props: Props) {
   const user = getUser()
-  const { row, handleBidClick, handleUnauthorizeClick, handleWinner} = props;
+  const { row, handleBidClick, handleDeleteAuction, handleUnauthorizeClick, handleWinner } = props;
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [isFavorite, setIsFavorite] = React.useState(row.isBookmarked);
@@ -119,7 +120,7 @@ function Row(props: Props) {
             {row.domainName}
           </Button>
         </StyledTableCell>
-        <StyledTableCell align="right">{row.latestBid?.amount || row.startingPrice}</StyledTableCell>
+        <StyledTableCell align="right">${row.latestBid?.amount || row.startingPrice}</StyledTableCell>
         <StyledTableCell align="right">{row.totalBids}</StyledTableCell>
         <StyledTableCell align="right">{row.status === 'closed' ? 'Closed' : time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
@@ -135,6 +136,12 @@ function Row(props: Props) {
             handleBidClick &&
             <Button disabled={time === 'Expired' || row.status === 'closed'} onClick={() => handleBidClick?.(row)} variant="contained">
               Bid Now
+            </Button>
+          }
+          {
+            handleDeleteAuction &&
+            <Button onClick={() => handleDeleteAuction?.(row._id)} variant="contained">
+              Delete
             </Button>
           }
         </StyledTableCell>
@@ -171,8 +178,9 @@ type TableProps = {
   auctionData: Bid[];
   handleUnauthorizeClick?: () => void;
   handleWinner?: (auctionId: string, bidderId: string) => void;
+  handleDeleteAuction?: (auctionId: string) => void;
 };
-export default function BaseTable({ handlePlaceBid, auctionData, handleUnauthorizeClick, handleWinner }: TableProps) {
+export default function BaseTable({ handlePlaceBid, auctionData, handleDeleteAuction, handleUnauthorizeClick, handleWinner }: TableProps) {
   return (
     <TableContainer sx={{ maxHeight: '70vh' }} component={Paper}>
       <Table size="small" aria-label="collapsible table">
@@ -191,7 +199,7 @@ export default function BaseTable({ handlePlaceBid, auctionData, handleUnauthori
           {
             auctionData.length ?
               auctionData.map((row) => (
-                <Row handleWinner={handleWinner} key={row._id} row={row} handleBidClick={handlePlaceBid} handleUnauthorizeClick={handleUnauthorizeClick} />
+                <Row handleDeleteAuction={handleDeleteAuction} handleWinner={handleWinner} key={row._id} row={row} handleBidClick={handlePlaceBid} handleUnauthorizeClick={handleUnauthorizeClick} />
               ))
               : <td colSpan={7}><EmptyComponent> There is no auction available </EmptyComponent></td>
 

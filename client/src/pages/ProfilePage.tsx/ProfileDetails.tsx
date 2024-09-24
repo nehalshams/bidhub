@@ -7,7 +7,7 @@ const ProfileDetails = () => {
     const user = getUser();
     const { firstName, lastName, email } = user || {}
     return (
-        <Box>
+        <Box sx={{ backgroundColor: 'primary.light', padding: '2rem', borderRadius: '1rem', maxWidth: '30rem'}}>
             <Box sx={{ margin: "1rem auto" }} display={'flex'} justifyContent={'center'}>
                 <BackgroundLetterAvatars name={`${firstName.toUpperCase()} ${lastName.toUpperCase()}` || 'N A'} />
             </Box>
