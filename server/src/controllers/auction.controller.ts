@@ -44,10 +44,10 @@ export const updateAuction = async (req: Request, res: Response) => {
 
 // Delete a domain auction listing (Admin only)
 export const deleteAuction = async (req: Request, res: Response) => {
-  const { domainId } = req.params;
+  const { auctionId } = req.params;
 
   try {
-    const deleteAuction = await Auction.findByIdAndDelete(domainId);
+    const deleteAuction = await Auction.findByIdAndDelete(auctionId);
     if (!deleteAuction) {
       return res.status(404).json({ message: "Auction not found" });
     }
@@ -409,6 +409,71 @@ export const selectAuctionWinner = async (req: Request, res: Response) => {
       message: 'Auction closed and winner selected successfully',
       auction,
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getAuctionsWithUserBids = async (req: Request, res: Response) => {
+  const { userId } = req.query; // Assuming userId is passed in the query
+
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
+  return res.status(200).json({ message: 'done'})
+
+  try {
+    // Step 1: Aggregate bids made by the user, and get auction details
+    const auctions = await Bid.aggregate([
+      {
+        $match: { userId }, // Match bids placed by the user
+      },
+      {
+        $group: { // Group by auctionId to get unique auctions
+          _id: "$auctionId",
+          latestUserBid: { $last: "$amount" }, // Get the latest bid amount from the user
+          bidTime: { $last: "$createdAt" }, // Get the latest bid time
+          totalBids: { $sum: 1 }, // Count the total number of bids placed
+        },
+      },
+      {
+        $lookup: { // Lookup the auction details
+          from: 'auctions',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'auction',
+        },
+      },
+      {
+        $unwind: "$auction", // Unwind the auction array
+      },
+      {
+        $project: { // Only return required fields
+          _id: 0,
+          auctionId: "$_id",
+          domainName: "$auction.domainName",
+          description: "$auction.description",
+          startingPrice: "$auction.startingPrice",
+          currentPrice: "$auction.currentPrice",
+          status: "$auction.status",
+          auctionEndTime: "$auction.auctionEndTime",
+          createdAt: "$auction.createdAt",
+          updatedAt: "$auction.updatedAt",
+          createdBy: "$auction.createdBy",
+          latestUserBid: 1,
+          bidTime: 1,
+          totalBids: 1,
+        }
+      }
+    ]);
+
+    if (auctions.length === 0) {
+      return res.status(404).json({ message: 'No bids found for this user' });
+    }
+
+    // Step 2: Send the auction list
+    res.status(200).json(auctions);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
