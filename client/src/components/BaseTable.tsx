@@ -120,8 +120,8 @@ function Row(props: Props) {
             {row.domainName}
           </Button>
         </StyledTableCell>
-        <StyledTableCell align="right">${row.latestBid?.amount || row.startingPrice}</StyledTableCell>
-        <StyledTableCell align="right">{row.totalBids}</StyledTableCell>
+        <StyledTableCell align="right">${row.latestBid?.amount || row.currentPrice || row.startingPrice}</StyledTableCell>
+        <StyledTableCell align="right">{row.totalBids || row.bidHistory.length}</StyledTableCell>
         <StyledTableCell align="right">{row.status === 'closed' ? 'Closed' : time}</StyledTableCell>
         {/* <StyledTableCell align="right">{row.carbs}</StyledTableCell>
         <StyledTableCell align="right">{row.protein}</StyledTableCell> */}

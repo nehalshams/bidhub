@@ -113,7 +113,8 @@ export const api = createApi({
           method: 'POST',
           body: params,
         }
-      }
+      },
+      invalidatesTags: ['Auction']
     }),
     getUserBids: builder.query({
       query: ({userId}) => `/auctions/user-bids?user-id=${userId}`, // endpoint for fetching posts
