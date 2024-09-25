@@ -194,7 +194,7 @@ export const getAllAuctions = async (req: Request, res: Response) => {
       .lean();
 
     // Step 2: Check if auctions are bookmarked by the current user
-    const user = await User.findById(userId).select('bookmarks');
+    const user = userId? await User.findById(userId).select('bookmarks') : null;
     const userBookmarks = user ? user.bookmarks.map(String) : [];
 
     // Step 3: Add isBookmarked, total number of bids, and latest bid information to each auction
