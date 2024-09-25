@@ -1,6 +1,7 @@
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import * as React from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 export default function DateComponent({ handleDateChange }: any) {
     const [date,setDate] = React.useState()
@@ -10,7 +11,7 @@ export default function DateComponent({ handleDateChange }: any) {
     }
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} >
-      <DatePicker name='date' value={date} onChange={handleChange} />
+      <DatePicker name='date' value={date} minDate={dayjs(new Date())} onChange={handleChange} />
     </LocalizationProvider>
   );
 }
