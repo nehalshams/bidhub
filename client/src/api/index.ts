@@ -65,7 +65,7 @@ export const api = createApi({
     getAllBid: builder.query({
       query: (bidData) => `/auctions/${bidData.auctionId}/bid`,
     }),
-    getAuctionDetail: builder.query({
+    getAuctionDetail: builder.query<{data: any}, {auctionId?: string}>({
       query: ({ auctionId }) => {
         return `/auctions/${auctionId}`;
       },
@@ -119,6 +119,15 @@ export const api = createApi({
     getUserBids: builder.query({
       query: ({userId}) => `/auctions/bids?userId=${userId}`, // endpoint for fetching posts
     }),
+    sendContactMsg: builder.mutation({
+      query: (params) => {
+        return {
+          url: `message/contact`,
+          method: 'POST',
+          body: params,
+        }
+      },
+    }),
   }),
 });
 
@@ -140,4 +149,5 @@ export const {
   useSelectWinnerMutation,
   useGetUserBidsQuery,
   useDeleteAuctionMutation,
+  useSendContactMsgMutation,
 } = api;

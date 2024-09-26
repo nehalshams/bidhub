@@ -1,9 +1,37 @@
 import { Box, Button, CardContent, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import TextArea from '../../components/TextArea'
 import Navbar from '../Layout/Navbar'
+import { useSendContactMsgMutation } from '../../api'
+import { toast } from 'react-toastify'
 
 const ContactUs = () => {
+
+    const [sendMessage] = useSendContactMsgMutation()
+    const [ state, setState] = useState({
+        textArea: "",
+        name: "",
+        email: ""
+    })
+    const handleFormChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target
+        setState({...state, [name]: value})
+    }
+    const handleSendMsg = async() => {
+        const { textArea, name, email} = state
+        const resp = await sendMessage({
+            message: textArea,
+            name,
+            email
+        })
+        console.log("🚀 ~ handleSendMsg ~ resp:", resp)
+        if('error' in resp){
+
+        }else {
+            toast.success('We got your message, Thanks for contacting us.')
+        }
+    }
+    console.log("🚀 ~ ContactUs ~ state:", state)
     return (
         <Box display={'flex'} justifyContent={'center'} pt={'2rem'}>
             <Navbar/>
@@ -18,7 +46,7 @@ const ContactUs = () => {
                 </CardContent>
                 <Box sx={{ margin: '5rem' }} bgcolor={'primary.light'} display={'flex'} flexDirection={'column'} gap={'1rem'} p={'2rem'} borderRadius={'1rem'}>
                     <TextField
-                        //   onChange={handleFormChange}
+                          onChange={handleFormChange}
                         name="name"
                         required
                         fullWidth
@@ -28,7 +56,7 @@ const ContactUs = () => {
                     //   value={firstName}
                     />
                     <TextField
-                        //   onChange={handleFormChange}
+                          onChange={handleFormChange}
 
                         name="email"
                         required
@@ -38,9 +66,9 @@ const ContactUs = () => {
                         size="small"
                     //   value={firstName}
                     />
-                    <TextArea placeholder={'Message'}/>
+                    <TextArea handleChange={handleFormChange} placeholder={'Message'}/>
 
-                    <Button variant='contained'>
+                    <Button onClick={handleSendMsg} variant='contained'>
                         Send
                     </Button>
                 </Box>

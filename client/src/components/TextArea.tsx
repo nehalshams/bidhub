@@ -3,10 +3,11 @@ import { styled } from '@mui/system';
 import { TextareaAutosize } from '@mui/material';
 
 type Props = {
-    placeholder: string
+    placeholder: string;
+    handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
-export default function TextArea({ placeholder}: Props) {
-  return <TextareaAuto aria-label="empty textarea" placeholder={placeholder} minRows={10} />;
+export default function TextArea({ placeholder, handleChange}: Props) {
+  return <TextareaAuto aria-label="empty textarea" name='textArea' onChange={handleChange} placeholder={placeholder} minRows={10} />;
 
 }
 
