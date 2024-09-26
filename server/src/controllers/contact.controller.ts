@@ -15,8 +15,8 @@ export const sendContactMsg = async (req: Request, res: Response) => {
             }
         });
         const mailOptions = {
-            from: "dev.nshams@gmail.com",  // Sender address
-            to: email,  // Recipient's address
+            from: email,  // Sender address
+            to: "bidhub@yopmail.com",  // Recipient's address
             subject: 'Help',  // Subject
             text: `Hello from ${name}`, // Plain text body
             html: `<h1>Hello</h1><p> ${message} </p>`  // HTML body
