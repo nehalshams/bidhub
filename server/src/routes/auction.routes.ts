@@ -22,6 +22,8 @@ router.post('/', createAuction);
 // Get all domain auction listings
 router.get('/', getAllAuctions);
 
+router.get('/bids', getAuctionsWithUserBids);
+
 // Get a specific domain auction listing by ID
 // router.get('/:domainId', getDomainById);
 
@@ -47,7 +49,5 @@ router.get('/:auctionId/bid', getAllBid)
 
 // select winner
 router.post('/select-winner', selectAuctionWinner)
-
-router.get('/user-bids', getAuctionsWithUserBids)
 
 export default router;

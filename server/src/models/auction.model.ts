@@ -13,6 +13,7 @@ export interface IAuction extends Document {
   createdBy?: string;
   winner?: ObjectId;
   bidHistory?: string[];
+  bidders: ObjectId[];
 }
 
 const AuctionSchema: Schema = new Schema({
@@ -26,7 +27,8 @@ const AuctionSchema: Schema = new Schema({
   updatedAt: { type: Date, default: Date.now },
   bidHistory: [{ type: Schema.Types.ObjectId, ref: 'Bid', default: []}],
   createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
-  winner: { type: Schema.Types.ObjectId, ref: 'User' } // Store the winner of the auction
+  winner: { type: Schema.Types.ObjectId, ref: 'User' }, // Store the winner of the auction
+  bidders: [{ type: Schema.Types.ObjectId, ref: "User"}]
 });
 
 // Adding virtual field for isBookmarked

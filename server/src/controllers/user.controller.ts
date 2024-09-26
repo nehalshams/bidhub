@@ -134,7 +134,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     await user.save();
 
     // Create the reset link with token
-    const resetUrl = `${req.protocol}://${frontendHost}/sign-in/reset-password?token=${resetToken}`;
+    const resetUrl = `${frontendHost}/sign-in/reset-password?token=${resetToken}`;
 
     // Send an email (this is a simple example using nodemailer)
     const transporter = nodemailer.createTransport({
