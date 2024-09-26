@@ -197,7 +197,7 @@ export default function BaseTable({ handlePlaceBid, auctionData, handleDeleteAuc
         </TableHead>
         <TableBody>
           {
-            auctionData.length ?
+            auctionData?.length ?
               auctionData.map((row) => (
                 <Row handleDeleteAuction={handleDeleteAuction} handleWinner={handleWinner} key={row._id} row={row} handleBidClick={handlePlaceBid} handleUnauthorizeClick={handleUnauthorizeClick} />
               ))

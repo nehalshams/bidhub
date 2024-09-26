@@ -117,7 +117,7 @@ export const api = createApi({
       invalidatesTags: ['Auction']
     }),
     getUserBids: builder.query({
-      query: ({userId}) => `/auctions/user-bids?user-id=${userId}`, // endpoint for fetching posts
+      query: ({userId}) => `/auctions/bids?userId=${userId}`, // endpoint for fetching posts
     }),
   }),
 });

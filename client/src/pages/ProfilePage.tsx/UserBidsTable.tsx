@@ -2,20 +2,25 @@ import React from 'react'
 import BaseTable from '../../components/BaseTable'
 import { useGetUserBidsQuery } from '../../api'
 import { useLocation, useParams } from 'react-router-dom'
+import { CircularProgress } from '@mui/material'
 
 const UserBidsTable = () => {
     const { userId } = useParams();
 
-    const { data: UsersAuction } = useGetUserBidsQuery({
+    const { data: UserBids, isLoading } = useGetUserBidsQuery({
         userId
     })
-    console.log("🚀 ~ UserBidsTable ~ UsersAuction:", UsersAuction)
     return (
 
         <div>
-            <BaseTable
-                auctionData={ []}
-            />
+            {
+                isLoading ?
+                    <CircularProgress />
+                    :
+                    <BaseTable
+                        auctionData={UserBids || []}
+                    />
+            }
         </div>
     )
 }
