@@ -5,11 +5,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
 export default function DomainCardComponent({ data }: any) {
-    console.log("🚀 ~ file: DomainCard.tsx:12 ~ DomainCardComponent ~ data:", data)
     const{ domainName } = data
   
   const navigate = useNavigate()

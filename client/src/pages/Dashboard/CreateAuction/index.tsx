@@ -9,6 +9,7 @@ import { useCreateAuctionMutation } from "../../../api";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../utils/AuthProvider";
 import { getUser } from "../../../utils/helper";
+import dayjs from "dayjs";
 
 type AuctionForm = {
   domainName?: string;
@@ -22,17 +23,17 @@ type Props = {
   handleSignInModal: () => void;
 }
 export default function CreateAuction({ handleSignInModal }: Props) {
-  const {isAuthenticated } = React.useContext(AuthContext);
+  const { isAuthenticated } = React.useContext(AuthContext);
   const userId = getUser()?._id
 
   const [auctionModel, setAuctionModel] = React.useState(false);
   const [auctionForm, setAuctionForm] = React.useState<AuctionForm>();
 
-  const [ createAuction] = useCreateAuctionMutation()
+  const [createAuction] = useCreateAuctionMutation()
   const handleCreateAuctionBtn = () => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       setAuctionModel(true);
-    }else{
+    } else {
       handleSignInModal()
     }
   };
@@ -46,14 +47,17 @@ export default function CreateAuction({ handleSignInModal }: Props) {
   };
 
   const handleCreateAuction = async () => {
-    const resp = await createAuction({...auctionForm, userId })
-    if(resp && resp?.data?.success){
+    const date = dayjs(auctionForm?.auctionEndTime); // Parse the date
+    const endOfDay = date.endOf('day'); // Set it to the end of the day
+
+    const resp = await createAuction({ ...auctionForm, auctionEndTime: endOfDay, userId })
+    if (resp && resp?.data?.success) {
       toast.success('Auction created successfully.');
       setAuctionModel(false)
-    }else {
+    } else {
       toast.error('Auction not created');
     }
-    
+
   };
   return (
     <>

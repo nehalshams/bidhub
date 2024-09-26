@@ -13,8 +13,8 @@ export default function AuctionCardComponent({ domainName, auctionEndTime, start
 
   const navigate = useNavigate()
   return (
-    <Box sx={{ minWidth: 275 }}>
-      <Card variant="outlined">
+    <Box sx={{ minWidth: 200 }}>
+      <Card sx={{ backgroundColor: "primary.light"  }} variant="outlined">
         <React.Fragment>
           <CardContent>
             <Typography variant="h5" component="div">
@@ -24,10 +24,10 @@ export default function AuctionCardComponent({ domainName, auctionEndTime, start
               Auction end date: {dayjs(auctionEndTime).format('MM/DD/YYYY')}
             </Typography>
             <Typography variant="body2">
-              Current Price: {currentPrice}
+              Current Price: $ {currentPrice}
             </Typography>
             <Typography variant="body2">
-              Starting price: {startingPrice}
+              Starting price: $ {startingPrice}
               <br />
             </Typography>
           </CardContent>

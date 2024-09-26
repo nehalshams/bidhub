@@ -162,6 +162,15 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
+export const StyledTableCell2 = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.common.black,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -197,7 +206,7 @@ export default function BaseTable({ handlePlaceBid, auctionData, handleDeleteAuc
         </TableHead>
         <TableBody>
           {
-            auctionData.length ?
+            auctionData?.length ?
               auctionData.map((row) => (
                 <Row handleDeleteAuction={handleDeleteAuction} handleWinner={handleWinner} key={row._id} row={row} handleBidClick={handlePlaceBid} handleUnauthorizeClick={handleUnauthorizeClick} />
               ))

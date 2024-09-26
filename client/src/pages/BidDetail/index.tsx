@@ -43,30 +43,31 @@ const BidDetail = () => {
       alignItems={"center"}
       spacing={"1rem"}
       padding={"1rem"}
+      flexDirection={'column'}
     >
       {isLoading ? (
-        <Box flex={1}><CircularProgress/></Box>
+        <Box display={'flex'} justifyContent={'center'} flex={1}><CircularProgress/></Box>
       ) : (
         <>
           <Box width={'100%'} display={'flex'} justifyContent={'center'}>
             <Typography variant="h3" color="primary"><LanguageIcon fontSize="large"/> {auctionData?.data.domainName}</Typography>
           </Box>
-          <Grid2 size={{ xs: 12, md: 4 }}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Typography>Auction Details</Typography>
             <BidCard data={auctionData?.data} />
           </Grid2>
-          <Grid2 size={{ xs: 12, md: 4 }}>
+          {/* <Grid2 size={{ xs: 12, md: 4 }}>
             <Typography>Domain Details</Typography>
             <DomainCardComponent data={auctionData?.data || {}}/>
-          </Grid2>
+          </Grid2> */}
 
-          <Grid2 size={{ xs: 12, md: 8 }}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <HistoryTable bidHistory={auctionData?.data.bidHistory || []} />
           </Grid2>
         </>
       )}
 
-      <Grid2 size={{ xs: 12, md: 8 }}>
+      <Grid2 size={{ xs: 12 }} display={'flex'} justifyContent={'center'}>
         <Button onClick={handleBackBtn} variant="contained">
           Back
         </Button>
