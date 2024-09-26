@@ -3,6 +3,7 @@ import cors, { CorsOptions } from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.routes';
 import auctionRoutes from './routes/auction.routes';
+import messageRoutes from './routes/message.routes'
 import connectDB from './config/db';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 
@@ -37,6 +38,7 @@ connectDB();
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/message',  messageRoutes)
 app.use('/api/auctions', auctionRoutes);
 
 app.use(errorHandler);
