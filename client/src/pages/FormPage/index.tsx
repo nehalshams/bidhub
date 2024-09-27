@@ -58,8 +58,9 @@ export default function FormPage() {
       localStorage.setItem('user', JSON.stringify(resp.data.user))
       navigate('/')
       window.location.reload()
-    } else {
-      toast.error('Something went wrong')
+    } else if(resp.error) {
+      const err = resp.error as any
+      toast.error(err.data.message || 'Something went wrong')
     }
   };
 

@@ -213,6 +213,7 @@ export default function Navbar(props: Props) {
             size="large"
             aria-label="show 4 new mails"
             color="inherit"
+            onClick={() => handleNavItem('Home')}
           >
             {/* <Badge sx={{ mt: '-6px'}} color="error">
               <img src={Logo} alt="logo" />
